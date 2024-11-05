@@ -11,10 +11,11 @@
 	<nav>
     	<ul>
 			<li><a href="index.jsp">Home</a></li>
-    		<li><a href="services.jsp">Browse Services</a></li>
+    		<li><a href="serviceCategory.jsp">Browse Services</a></li>
         	<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
-        	<li><a href="login.jsp">Login</a></li>
-            <li><a href="cart.jsp"><img src="media/freepik__background__38091.png" alt="Cart"></a></li>
+            <li><a href="cart.jsp">Cart</a></li>
+            <li><a href="login.jsp">Login</a></li>
+        	<li><a href="profile.jsp">Profile</a></li>
     	</ul>
     </nav>
 </body>

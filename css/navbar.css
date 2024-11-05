@@ -1,6 +1,4 @@
-@charset "UTF-8";
-
-nav{
+nav {
     display: flex;
     background-color: #24304C;
     padding: 10px;
@@ -10,7 +8,7 @@ nav{
 ul {
     display: flex;
     list-style-type: none;
-    width:100% !important;
+    width: 100% !important;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -19,7 +17,8 @@ ul {
 }
 
 ul li a {
-    display: block;
+    display: flex; /* Allows the image and text to align better */
+    align-items: center; /* Centers the image vertically */
     color: #FAFAFA;
     text-align: center;
     padding: 14px 20px;
@@ -34,7 +33,10 @@ ul li a:hover {
     transform: scale(1.05);
 }
 
-img{
-	width:50px;
-	height:50px;
+/* Styling for images in the navbar */
+nav ul li a img {
+    max-width: 40px; /* Adjust this value to control image size */
+    padding:0;
+    margin:0;
+    height: auto;
 }
