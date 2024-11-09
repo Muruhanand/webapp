@@ -25,18 +25,24 @@ ul li a {
     text-decoration: none;
     background-color: #24304C;
     transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
+    line-height: 1.5em;  /* this is temporary sln lol by using line-height if no other choice just use this */
 }
 
 ul li a:hover {
     background-color: #3163A8;
     color: #FAFAFA;
-    transform: scale(1.05);
+    transform: scale(1.05);  
 }
 
 /* Styling for images in the navbar */
+
 nav ul li a img {
-    max-width: 40px; /* Adjust this value to control image size */
-    padding:0;
-    margin:0;
-    height: auto;
+    height: 1.5em; 
+    width: auto; 
+    padding: 0;
+    margin: 0;
+    vertical-align: middle;
+    transform: scale(3); /* change here for scaling of logo */
 }
+
+
