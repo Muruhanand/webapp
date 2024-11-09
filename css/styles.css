@@ -83,19 +83,17 @@ ul li {
 }
 
 .about-container {
-    max-width: 1200px;
-    margin: 0 auto;
+    margin: 0;
 }
 
 #about-us h2 {
     font-size: 2.5em;
-    color: #2c3e50;
+    color: #3163A8;
     margin-bottom: 20px;
 }
 
 #about-us p {
     font-size: 1.1em;
-    color: #3163A8;
     line-height: 1.6;
     margin-bottom: 30px;
 }
@@ -107,8 +105,8 @@ ul li {
     margin-bottom: 40px;
 }
 
-.about-mission{
-	padding-bottom:40px;
+.about-mission, .about-values{
+	padding:40px;
 }
 
 .about-mission,
@@ -116,14 +114,7 @@ ul li {
 	background-color: #24304C;
 }
 
-.about-values table tr td{
+.about-values table tr td,.about-values table tr th, .about-values h3,.about-mission h3, #about-us .about-container .about-mission p{
 	color: #B5C9CC;
 }
 
-.about-values h3,.about-mission h3{
-	color:#B5C9CC;
-}
-
-.about-values p,.about-mission h3{
-	color:#B5C9CC;
-}

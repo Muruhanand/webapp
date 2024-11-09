@@ -38,7 +38,8 @@
 					cleaning services while ensuring the well-being of our clients and
 					the environment. We believe that a clean space fosters
 					productivity, relaxation, and peace of mind, which is why we strive
-					to exceed expectations in every job we undertake.</p>
+					to exceed expectations in every job we undertake.
+				</p>
 			</div>
 
 			<div class="about-values">
@@ -48,7 +49,7 @@
 						<th><strong>Quality:</strong></th>
 						<th><strong>Integrity:</strong></th>
 						<th><strong>Eco-Friendliness:</strong></th>
-						<th><strong>Customer Satisfaction:</strong></th>
+						<th>Customer Satisfaction:</th>
 					</tr>
 					<tr>
 						<td>We use the best products and
