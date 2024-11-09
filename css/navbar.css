@@ -17,8 +17,8 @@ ul {
 }
 
 ul li a {
-    display: flex; /* Allows the image and text to align better */
-    align-items: center; /* Centers the image vertically */
+    display: flex; 
+    align-items: center; 
     color: #FAFAFA;
     text-align: center;
     padding: 14px 20px;
@@ -33,9 +33,8 @@ ul li a:hover {
     transform: scale(1.05);
 }
 
-/* Styling for images in the navbar */
 nav ul li a img {
-    max-width: 40px; /* Adjust this value to control image size */
+    max-width: 40px;
     padding:0;
     margin:0;
     height: auto;

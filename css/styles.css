@@ -1,5 +1,5 @@
 @charset "UTF-8";
-
+/*General Styling*/
 * {
     margin: 0;
     padding: 0;
@@ -8,10 +8,28 @@
 }
 
 body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	background-color: #fafafa;
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #fafafa;
+}
+
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+h3 {
+    font-size: 2em;
+    color: #3163A8;
+    margin-bottom: 15px;
+}
+
+
+
+ul li {
+    margin-bottom: 10px;
+    color: #34495e;
 }
 
 /* Hero Section */
@@ -48,53 +66,64 @@ body {
     background-color: #24304C;
 }
 
-/* Services Section */
-#services {
-    padding: 50px 20px;
-    background-color: #f4f4f4;
-    text-align: center;
-}
-
-#services h2 {
-    font-size: 2.5em;
-    margin-bottom: 30px;
-}
-
-.service-cards {
-    display: flex;
-    justify-content: space-around;
-    gap: 20px;
-}
-
-.service-cards .card {
-    background-color: #fafafa;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    width: 30%;
-}
-
-.service-cards .card h3 {
-    margin-bottom: 10px;
-}
-
-.service-cards .card p {
-    font-size: 1em;
-}
-
-/* About Section */
-#about {
-    padding: 50px 20px;
-    text-align: center;
-}
-
-#about h2 {
-    font-size: 2.5em;
+.about-cta p {
+    color: #2c3e50;
     margin-bottom: 20px;
 }
 
-#about p {
-    font-size: 1.2em;
-    width: 80%;
+.about-cta .cta-button:hover {
+    background-color: #24304C;
+}
+/*Styles for About Us Section */
+#about-us {
+	width:100%;
+    padding-top: 50px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.about-container {
+    max-width: 1200px;
     margin: 0 auto;
+}
+
+#about-us h2 {
+    font-size: 2.5em;
+    color: #2c3e50;
+    margin-bottom: 20px;
+}
+
+#about-us p {
+    font-size: 1.1em;
+    color: #3163A8;
+    line-height: 1.6;
+    margin-bottom: 30px;
+}
+
+
+.about-values,
+.about-team,
+.about-services {
+    margin-bottom: 40px;
+}
+
+.about-mission{
+	padding-bottom:40px;
+}
+
+.about-mission,
+.about-values{
+	background-color: #24304C;
+}
+
+.about-values table tr td{
+	color: #B5C9CC;
+}
+
+.about-values h3,.about-mission h3{
+	color:#B5C9CC;
+}
+
+.about-values p,.about-mission h3{
+	color:#B5C9CC;
 }
