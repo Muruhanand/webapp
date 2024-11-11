@@ -5,11 +5,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Search Page</title>
+    <style>
+        /* Styling for the search form and pagination */
+        .search-form, .pagination {
+            margin-bottom: 1em;
+        }
+
+        /* Flex container for results */
+        .results-container {
+            display: flex;
+            flex-wrap: wrap; /* Allows items to wrap to the next row if they don't fit */
+            gap: 1em; /* Space between items */
+        }
+
+        /* Individual result item styling */
+        .result-item {
+            border: 1px solid red;
+            padding: 1em;
+            width: calc(50% - 1em); /* Adjust width as needed; -1em accounts for the gap */
+            box-sizing: border-box;
+        }
+
+        /* Align pagination links horizontally */
+        .pagination a, .pagination span {
+            margin-right: 0.5em;
+        }
+    </style>
 </head>
 <body>
 
     <!-- Search form -->
-    <form action="search.jsp" method="GET">
+    <form class="search-form" action="servicetest.jsp" method="GET">
         <input type="text" name="query" placeholder="Search..." 
                value="<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>">
         <button type="submit">Search</button>
@@ -43,7 +69,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Define Connection URL
-        String connURL = "jdbc:mysql://localhost:3306/member?user=root&password=root123&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
 
         // Establish connection to URL
         conn = DriverManager.getConnection(connURL);
@@ -52,13 +78,13 @@
         String sqlStr;
         if (searchquery == null || searchquery.trim().isEmpty()) {
             // If no search query is provided, fetch all users with pagination
-            sqlStr = "SELECT * FROM users LIMIT ? OFFSET ?";
+            sqlStr = "SELECT * FROM service_category LIMIT ? OFFSET ?";
             pstmt = conn.prepareStatement(sqlStr);
             pstmt.setInt(1, recordsPerPage); // LIMIT 2 records per page
             pstmt.setInt(2, offset); // OFFSET for pagination
         } else {
             // If there's a search query, filter by username with pagination
-            sqlStr = "SELECT * FROM users WHERE username LIKE ? LIMIT ? OFFSET ?";
+            sqlStr = "SELECT * FROM service_category WHERE category_name LIKE ? LIMIT ? OFFSET ?";
             pstmt = conn.prepareStatement(sqlStr);
             pstmt.setString(1, searchquery + "%"); // Match username starting with the search query
             pstmt.setInt(2, recordsPerPage); // LIMIT 2 records per page
@@ -72,19 +98,29 @@
         if (!rs.isBeforeFirst()) {
             out.println("<p>No users found.</p>");
         } else {
+%>
+            <!-- Flex container for results -->
+            <div class="results-container">
+<%
             // Process Results
             while (rs.next()) {
-                int id = rs.getInt("id");
-                String name = rs.getString("username");
-                String password = rs.getString("password");
+                int id = rs.getInt("category_id");
+                String category = rs.getString("category_name");
+                String description = rs.getString("description");
 %>
-                <div style="border:1px solid red; padding:1em; margin:1em 0;">
+                <div class="result-item">
                     <div>ID: <%= id %></div>
-                    <div>Name: <%= name %></div>
-                    <div>Password: <%= password %></div>
+                    <div>Name: <%= category %></div>
+                    <div>Password: <%= description %></div>
+                                    <input type="button" 
+                       onclick="location.href='servicepagetest.jsp?categoryid=<%= id %>';" 
+                       value="View more" />
                 </div>
 <%
             }
+%>
+            </div>
+<%
         }
 
     } catch (Exception e) {
@@ -98,16 +134,15 @@
 %>
 
 <!-- Pagination Controls - Only at the Bottom -->
-<div>
+<div class="pagination">
     <% if (currentPage > 1) { %>
-        <a href="search.jsp?query=<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>&page=<%= currentPage - 1 %>">Previous</a>
+        <a href="servicetest.jsp?query=<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>&page=<%= currentPage - 1 %>">Previous</a>
     <% } %>
 
     <span>Page <%= currentPage %></span>
 
-    <a href="search.jsp?query=<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>&page=<%= currentPage + 1 %>">Next</a>
+    <a href="servicetest.jsp?query=<%= request.getParameter("query") != null ? request.getParameter("query") : "" %>&page=<%= currentPage + 1 %>">Next</a>
 </div>
-
 
 </body>
 </html>
