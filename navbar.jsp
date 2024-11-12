@@ -7,11 +7,11 @@
     <link href="css/navbar.css" rel="stylesheet" />
 </head>
 <body>
-    <nav>
-        <ul>
-            <li><a href="index.jsp">Home</a></li>
-            <li><a href="serviceCategory.jsp">Browse Services</a></li>
-            <li><a href="bookAppointment.jsp">Book an Appointment</a></li>
+	<nav>
+    	<ul>
+			<li><a href="index.jsp"><img src="media/brand-logo.png" alt="WebsiteLogo" class="navbarLogo"></img></a></li>
+    		<li><a href="serviceCategory.jsp">Browse Services</a></li>
+        	<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
             <li><a href="cart.jsp">Cart</a></li>
 
             <% 
