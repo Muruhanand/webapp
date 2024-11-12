@@ -26,11 +26,11 @@
             }
         }
     </script>
-	<form action = "/Practical/Prac2/verifyUser.jsp" method="post">
+	<form action = "loginprocess.jsp" method="post">
 		<ul>
 			<li>
-				<label for="memberid">Member ID:</label>
-				<input type="text" id="loginid" name="memberid">
+				<label for="email">Member ID:</label>
+				<input type="text" id="loginid" name="email">
 			</li>
 			<li>
 				<label for="password">Password:</label>
