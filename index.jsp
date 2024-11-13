@@ -5,12 +5,14 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>The Clean Slate</title>
+<title>The Cleaning Services</title>
 <link rel="stylesheet" href="css/styles.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
-
 	<!-- Hero Section -->
 	<section id="hero">
 		<div class="hero-content">
@@ -77,7 +79,7 @@
 			<div class="about-cta">
 				<p>If you have ever used our services, write in now if you wish 
 				to convey any feedback for our staff or services. Contact us now!</p>
-				<a href="contact.jsp" class="cta-button">Get in Touch</a>
+				<a href="feedback.jsp" class="cta-button">Get in Touch</a>
 			</div>
 		</div>
 	</section>
