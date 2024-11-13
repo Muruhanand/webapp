@@ -10,7 +10,7 @@
 	<nav>
     	<ul>
 			<li><a href="index.jsp"><img src="media/brand-logo.png" alt="WebsiteLogo" class="navbarLogo"></img></a></li>
-    		<li><a href="serviceCategory.jsp">Browse Services</a></li>
+    		<li><a href="servicetest.jsp">Browse Services</a></li>
         	<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
             <li><a href="cart.jsp">Cart</a></li>
 
@@ -25,6 +25,7 @@
                 } else {
             %>
                 <li><a href="login.jsp">Login</a></li>
+                <li><a href="register.jsp">Register</a></li>
             <% 
                 }
             %>

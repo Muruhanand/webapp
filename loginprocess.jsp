@@ -41,7 +41,7 @@
         conn = DriverManager.getConnection(connURL);
 
         // SQL query to fetch the stored hashed password by email
-        String sql = "SELECT password AND customer_id FROM user WHERE email = ?";
+        String sql = "SELECT password, customer_id FROM user WHERE email = ?";
 
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, email);  // Set the email parameter for the query
