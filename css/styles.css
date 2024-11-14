@@ -4,11 +4,12 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
-    font-family: Arial, sans-serif;
 }
 
 body {
-    font-family: Arial, sans-serif;
+    font-family: "Libre Baskerville", serif;
+  	font-weight: 400;
+  	font-style: normal;
     margin: 0;
     padding: 0;
     background-color: #fafafa;
@@ -17,6 +18,17 @@ body {
 ul {
     list-style-type: none;
     padding: 0;
+}
+
+h1, h2, h3{
+	font-family: "Josefin Sans", sans-serif;
+  	font-weight: 400;
+  	font-style: normal;
+}
+
+p{
+	font-family: "Libre Baskerville", serif;
+  	font-weight: 400;
 }
 
 h3 {
@@ -117,4 +129,3 @@ ul li {
 .about-values table tr td,.about-values table tr th, .about-values h3,.about-mission h3, #about-us .about-container .about-mission p{
 	color: #B5C9CC;
 }
-

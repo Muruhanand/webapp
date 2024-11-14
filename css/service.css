@@ -1,0 +1,26 @@
+        .search-form, .pagination {
+            margin-bottom: 1em;
+        }
+
+        /* Flex container for results */
+        .results-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1em;
+        }
+
+        /* Individual result item styling */
+        .result-item {
+            border: 1px solid red;
+            padding: 1em;
+            width: calc(50% - 1em);
+            box-sizing: border-box;
+        }
+
+        /* Align pagination links horizontally */
+        .pagination a, .pagination span {
+            margin-right: 0.5em;
+        }
+  
+
+

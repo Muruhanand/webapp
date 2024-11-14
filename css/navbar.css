@@ -1,48 +1,37 @@
-nav {
-    display: flex;
-    background-color: #24304C;
-    padding: 10px;
-    justify-content: space-evenly;
-}
-
-ul {
+/* Updated navbar.css */
+nav ul.navbar-menu {
     display: flex;
     list-style-type: none;
     width: 100% !important;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #24304C;
+    background-color: #24304C; 
     justify-content: space-evenly;
 }
 
-ul li a {
-    display: flex; /* Allows the image and text to align better */
-    align-items: center; /* Centers the image vertically */
+nav ul.navbar-menu li a {
+    display: flex;
+    align-items: center;
     color: #FAFAFA;
     text-align: center;
     padding: 14px 20px;
     text-decoration: none;
-    background-color: #24304C;
+   background-color: #24304C;
     transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
-    line-height: 1.5em;  /* this is temporary sln lol by using line-height if no other choice just use this */
 }
 
-ul li a:hover {
-    background-color: #3163A8;
+nav ul.navbar-menu li a:hover:not(.navbarLogo) {
+   background-color: #3163A8; 
     color: #FAFAFA;
-    transform: scale(1.05);  
+    transform: scale(1.05);
 }
 
-/* Styling for images in the navbar */
-
-nav ul li a img {
+.navbarLogo {
     height: 1.5em; 
     width: auto; 
     padding: 0;
     margin: 0;
     vertical-align: middle;
-    transform: scale(3); /* change here for scaling of logo */
+    transform: scale(3); /* Adjust this scaling factor as needed */
 }
-
-
