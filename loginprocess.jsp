@@ -37,7 +37,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Connect to the database
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         // SQL query to fetch the stored hashed password by email
@@ -54,12 +54,14 @@
 
             // Compare the hashed password entered by the user with the stored hashed password
             if (hashedPassword.equals(storedHashedPassword)) {
-            	session.setAttribute("userEmail", email);
-            	session.setAttribute("userid",customerid);
-            	response.sendRedirect("index.jsp");
+                // Create a User object
 
-                // You can redirect to a user dashboard or homepage here
-                // response.sendRedirect("dashboard.jsp");
+                // Set the user object in the session
+                session.setAttribute("userEmail", email);
+                session.setAttribute("userid", customerid);
+
+                // Redirect to the homepage or user dashboard
+                response.sendRedirect("index.jsp");
             } else {
                 out.println("<p>Invalid password.</p>");
             }
