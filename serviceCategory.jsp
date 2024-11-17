@@ -1,6 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
-<%@ page import="java.sql.*"%>
+<%@ page import="java.sql.*, java.net.URLEncoder"%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -30,17 +30,16 @@
 	margin-right: 0.5em;
 }
 </style>
-<link rel="stylesheet" href="css/styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link
-	href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
-	rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/styles.css">
+<link rel="stylesheet" href="css/service.css">
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
-	<!-- Search form -->
-	<form class="search-form" action="servicetest.jsp" method="GET">
+
+	<form class="search-form" action="serviceCategory.jsp" method="GET">
 		<input type="text" name="query" placeholder="Search..."
 			value="<%=request.getParameter("query") != null ? request.getParameter("query") : ""%>">
 		<button type="submit">Search</button>
@@ -60,7 +59,6 @@
 		}
 	}
 
-	// Calculate the OFFSET based on the current page
 	int recordsPerPage = 4;
 	int offset = (currentPage - 1) * recordsPerPage;
 
@@ -68,104 +66,109 @@
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 	ResultSet rs = null;
-
+	int totalRecords = 0;
 	try {
-		// Load JDBC Driver
 		Class.forName("com.mysql.cj.jdbc.Driver");
 
-		// Define Connection URL
 		String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
-
-		// Establish connection to URL
 		conn = DriverManager.getConnection(connURL);
 
-		// Prepare SQL query based on whether search query is provided
-		String sqlStr;
-		if (searchquery == null || searchquery.trim().isEmpty()) {
-			// If no search query is provided, fetch all users with pagination
-			sqlStr = "SELECT * FROM service_category LIMIT ? OFFSET ?";
-			pstmt = conn.prepareStatement(sqlStr);
-			pstmt.setInt(1, recordsPerPage); // LIMIT 2 records per page
-			pstmt.setInt(2, offset); // OFFSET for pagination
-		} else {
-			// If there's a search query, filter by username with pagination
-			sqlStr = "SELECT * FROM service_category WHERE category_name LIKE ? LIMIT ? OFFSET ?";
-			pstmt = conn.prepareStatement(sqlStr);
-			pstmt.setString(1, searchquery + "%");
-			pstmt.setInt(4, recordsPerPage);
-			pstmt.setInt(3, offset);
-		}
-
+		String countQuery = "SELECT COUNT(*) FROM service_category";
+		pstmt = conn.prepareStatement(countQuery);
 		rs = pstmt.executeQuery();
 
-		if (!rs.isBeforeFirst()) {
-			out.println("<p>No users found.</p>");
+		
+		if (rs.next()) {
+			totalRecords = rs.getInt(1);
+		}
+		rs.close();
+		pstmt.close();
+
+		if (totalRecords == 0) {
+			out.println("<p>No service categories found.</p>");
 		} else {
+			// Prepare SQL query based on whether search query is provided
+			String sqlStr;
+			if (searchquery == null || searchquery.trim().isEmpty()) {
+				sqlStr = "SELECT * FROM service_category LIMIT ? OFFSET ?";
+				pstmt = conn.prepareStatement(sqlStr);
+				pstmt.setInt(1, recordsPerPage);
+				pstmt.setInt(2, offset);
+			} else {
+				sqlStr = "SELECT * FROM service_category WHERE category_name LIKE ? LIMIT ? OFFSET ?";
+				pstmt = conn.prepareStatement(sqlStr);
+				pstmt.setString(1, searchquery + "%");
+				pstmt.setInt(2, recordsPerPage);
+				pstmt.setInt(3, offset);
+			}
+
+			rs = pstmt.executeQuery();
+
+			// Check if there are any results
+			if (!rs.isBeforeFirst()) {
+				out.println("<p>No service categories found.</p>");
+			} else {
 	%>
 	<!-- Flex container for results -->
-	<div class="results-container">
+	<div class="category-container">
 		<%
-		// Process Results
-		while (rs.next()) {
-			int id = rs.getInt("category_id");
-			String category = rs.getString("category_name");
-			String description = rs.getString("description");
+			while (rs.next()) {
+				int id = rs.getInt("category_id");
+				String category = rs.getString("category_name");
+				String description = rs.getString("description");
 		%>
-		<div class="result-item">
-			<div display="none">
-				ID:
-				<%=id%></div>
-			<div>
-				Name:
-				<%=category%></div>
-			<div>
-				Password:
-				<%=description%></div>
-			<input type="button"
-				onclick="location.href='servicepagetest.jsp?categoryid=<%=id%>';"
-				value="View more" />
+		<div class="category-details">
+			<h3> <strong> <%=category%> </strong> </h3>
+
+			<p> <%=description%> </p>
+			<a href='serviceDetails.jsp?categoryid=<%=id%>'> See More </a>
 		</div>
 		<%
-		}
+			}
 		%>
 	</div>
 	<%
-	}
+			}
+		}
 
 	} catch (Exception e) {
-	out.println("Error: " + e.getMessage());
+		out.println("Error: " + e.getMessage());
 	} finally {
-	if (rs != null)
-	try {
-		rs.close();
-	} catch (SQLException ignore) {
-	}
-	if (pstmt != null)
-	try {
-		pstmt.close();
-	} catch (SQLException ignore) {
-	}
-	if (conn != null)
-	try {
-		conn.close();
-	} catch (SQLException ignore) {
-	}
+		if (rs != null)
+			try {
+				rs.close();
+			} catch (SQLException ignore) {
+			}
+		if (pstmt != null)
+			try {
+				pstmt.close();
+			} catch (SQLException ignore) {
+			}
+		if (conn != null)
+			try {
+				conn.close();
+			} catch (SQLException ignore) {
+			}
 	}
 	%>
 
-	<!-- Pagination Controls - Only at the Bottom -->
+	<!-- Pagination Controls -->
 	<div class="pagination">
 		<%
+		String encodedQuery = searchquery != null ? URLEncoder.encode(searchquery, "UTF-8") : "";
 		if (currentPage > 1) {
 		%>
-		<a
-			href="servicetest.jsp?query=<%=request.getParameter("query") != null ? request.getParameter("query") : ""%>&page=<%=currentPage - 1%>">Previous</a>
+		<a href="serviceCategory.jsp?query=<%=encodedQuery%>&page=<%=currentPage - 1%>">Previous</a>
+		<span>Page <%=currentPage%></span>
+		<%
+		}
+		if (totalRecords > recordsPerPage * currentPage) {
+		%>
+		
+		<a href="serviceCategory.jsp?query=<%=encodedQuery%>&page=<%=currentPage + 1%>">Next</a>
 		<%
 		}
 		%>
-
-		<span>Page <%=currentPage%></span> <a
-			href="servicetest.jsp?query=<%=request.getParameter("query") != null ? request.getParameter("query") : ""%>&page=<%=currentPage + 1%>">Next</a>
 	</div>
 	<%@ include file="footer.jsp"%>
 </body>

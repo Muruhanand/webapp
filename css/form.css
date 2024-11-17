@@ -1,0 +1,9 @@
+@charset "UTF-8";
+
+form{
+	background-color:#24304C;
+	color:#fafafa;
+	border-radius:8px;
+	margin:100px;
+	padding:40px;
+}
