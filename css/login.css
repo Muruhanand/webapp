@@ -39,11 +39,14 @@ form {
 }
 
 .login-form {
+	box-shadow: inset 0px 0px 10px;
+	background-color: #fafafa; 
     list-style: none;
-    padding: 0;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     gap: 10px;
+    border-radius:5px;
 }
 
 .login-form li {
@@ -53,7 +56,7 @@ form {
 }
 
 ul.login-form li label {
-	color:#fafafa;
+	color:#3163A8;
     display: block; 
     margin-bottom: 5px;
 }
