@@ -14,7 +14,7 @@
 	<%
 		String email = request.getParameter("email");
     	String selectedDate = request.getParameter("selectedDate");
-    	String selectedTimeStart = request.getParameter("selectedTimeStart");
+    	String selectedTimestart = request.getParameter("selectedTimeStart");
         String selectedTimeEnd = request.getParameter("selectedTimeEnd");
     	String categoryOption = request.getParameter("categoryOptions");
     	String serviceOption = request.getParameter("serviceOptions");
@@ -33,7 +33,7 @@
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Date is required.");
         }
 
-        if (selectedTimeStart == null || selectedTimeStart.trim().isEmpty()) {
+        if (selectedTimestart == null || selectedTimestart.trim().isEmpty()) {
             isValid = false;
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Starting time is required.");
         }
@@ -46,7 +46,7 @@
         if (isValid) {
             try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-            Date startTime = sdf.parse(selectedTimeStart);
+            Date startTime = sdf.parse(selectedTimestart);
             Date endTime = sdf.parse(selectedTimeEnd);
 
             long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
@@ -98,7 +98,7 @@
                 pstmt.setString(2, serviceId);
                 pstmt.setString(3, categoryId);
                 pstmt.setString(4, selectedDate);
-                pstmt.setString(5, selectedTimeStart);
+                pstmt.setString(5, selectedTimestart);
                 pstmt.setString(6, selectedTimeEnd);
                 pstmt.setString(7, price);
                 pstmt.executeUpdate();
