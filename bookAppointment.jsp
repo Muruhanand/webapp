@@ -11,12 +11,13 @@
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
+	<script src="js/appointment.js"></script>
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
 	<%@page import="java.sql.*"%>
-	<form action="appointmentProcess.jsp">
-		<h3>Send us your feedback!</h3>
+	<form action="appointmentProcess.jsp" method="post">
+		<h3>Book an Appointment with us today!</h3>
 		<%
 		String serviceId = request.getParameter("serviceid");
 
@@ -158,7 +159,6 @@
 		</div>
 		<button type="submit" class="btn btn-primary mt-3">Submit</button>
 	</form>
-	<script src="/js/appointment.js"></script>
 	<%@ include file="footer.jsp"%>
 </body>
 </html>

@@ -28,13 +28,11 @@
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Invalid email address.");
         }
 
-        // Validate date
         if (selectedDate == null || selectedDate.trim().isEmpty()) {
             isValid = false;
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Date is required.");
         }
 
-        // Validate time
         if (selectedTimeStart == null || selectedTimeStart.trim().isEmpty()) {
             isValid = false;
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Starting time is required.");
@@ -44,7 +42,7 @@
             isValid = false;
             response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Starting time is required.");
         }
-        // Validate that the time between start and end are whole hours
+        
         if (isValid) {
             try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
