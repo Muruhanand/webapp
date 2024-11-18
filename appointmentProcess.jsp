@@ -11,6 +11,7 @@
     <%@page import="java.util.Date"%>
     <%@page import="java.sql.*"%>
     <%@page import="java.text.ParseException"%>
+    <%@page import="java.math.BigDecimal" %>
 	<%
 		String email = request.getParameter("email");
     	String selectedDate = request.getParameter("selectedDate");
@@ -90,17 +91,17 @@
                 String serviceId = rs.getString("service_id");
                 String serviceName = rs.getString("service_name");
                 String categoryId = rs.getString("category_id");
-                String price = rs.getString("price");
+                String priceStr = rs.getString("price");
+                BigDecimal price = new BigDecimal(priceStr);
 
-                String sqlStrInsert = "INSERT INTO appointment (email, service_id, category_id, appointment_date, start_time, end_time, price) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                String sqlStrInsert = "INSERT INTO booking (service_id, email, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
                 pstmt = conn.prepareStatement(sqlStrInsert);
-                pstmt.setString(1, email);
-                pstmt.setString(2, serviceId);
-                pstmt.setString(3, categoryId);
-                pstmt.setString(4, selectedDate);
-                pstmt.setString(5, selectedTimeStart);
-                pstmt.setString(6, selectedTimeEnd);
-                pstmt.setString(7, price);
+                pstmt.setString(2, email);
+                pstmt.setString(1, serviceId);
+                pstmt.setString(3, selectedDate);
+                pstmt.setString(4, selectedTimeStart);
+                pstmt.setString(5, selectedTimeEnd);
+                pstmt.setBigDecimal(6, price);
                 pstmt.executeUpdate();
                 response.sendRedirect("bookAppointment.jsp?success=Appointment booked successfully.");
             } else {

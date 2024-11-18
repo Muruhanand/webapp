@@ -25,6 +25,8 @@ CREATE TABLE `bookings` (
   `booking_id` int(11) NOT NULL AUTO_INCREMENT,
   `customer_id` int(11) NOT NULL,
   `service_id` int(11) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `booking_date` date NOT NULL,
   `booking_start_time` time NOT NULL,
   `booking_end_time` time NOT NULL,
   `total_price` decimal(10,2) NOT NULL,
