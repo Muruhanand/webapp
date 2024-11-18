@@ -2,7 +2,7 @@
 nav ul.navbar-menu {
     display: flex;
     list-style-type: none;
-    width: 100% !important;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
@@ -22,7 +22,7 @@ nav ul.navbar-menu li a {
 }
 
 nav ul.navbar-menu li a:hover:not(.navbarLogo) {
-   background-color: #3163A8; 
+    background-color: #3163A8;
     color: #FAFAFA;
     transform: scale(1.05);
 }

@@ -1,26 +1,22 @@
-        .search-form, .pagination {
-            margin-bottom: 1em;
-        }
 
-        /* Flex container for results */
-        .results-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1em;
-        }
+.service-details, .category-details {
+    padding: 50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #24304c;
+    border-radius: 5px;
+    border-width: 15px;
+    border-color: #3163A8;
+    color: #fafafa;
+    width: 50%;
+    height: 400px;
+}
 
-        /* Individual result item styling */
-        .result-item {
-            border: 1px solid red;
-            padding: 1em;
-            width: calc(50% - 1em);
-            box-sizing: border-box;
-        }
-
-        /* Align pagination links horizontally */
-        .pagination a, .pagination span {
-            margin-right: 0.5em;
-        }
-  
-
-
+.details-container, .category-container {
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: center;
+    align-items: center;
+}

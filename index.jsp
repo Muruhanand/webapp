@@ -13,7 +13,7 @@
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
-	    <% 
+	  <% 
         String userId = (String) session.getAttribute("userid");
     %>
 	<!-- Hero Section -->

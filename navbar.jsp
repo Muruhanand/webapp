@@ -12,7 +12,7 @@
 		<ul class="navbar-menu">
 			<li><a href="index.jsp"><img src="media/brand-logo.png"
 					alt="WebsiteLogo" class="navbarLogo"></a></li>
-			<li><a href="servicetest.jsp">Browse Services</a></li>
+			<li><a href="serviceCategory.jsp">Browse Services</a></li>
 			<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
 			<li><a href="cart.jsp">Cart</a></li>
 
@@ -21,6 +21,7 @@
 			if (userEmail != null) {
 			%>
 				<li><a href="profilelogic.jsp">Profile</a></li>
+				<li><a href="customerProfile.jsp">Profile</a></li>
 				<li><a href="logout.jsp">Logout</a></li>
 			<%
 			} else {
