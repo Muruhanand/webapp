@@ -54,16 +54,11 @@
 
             // Compare the hashed password entered by the user with the stored hashed password
             if (hashedPassword.equals(storedHashedPassword)) {
-                // Create a User object
+            	session.setAttribute("userid",customerid);
+            	response.sendRedirect("index.jsp");
 
-                // Set the user object in the session
-                session.setAttribute("userEmail", email);
-                session.setAttribute("userid", customerid);
-
-                // Redirect to the homepage or user dashboard
-                response.sendRedirect("index.jsp");
             } else {
-                out.println("<p>Invalid password.</p>");
+                response.sendRedirect("<p>Invalid password.</p>");
             }
         } else {
             out.println("<p>No user found with the provided email.</p>");
