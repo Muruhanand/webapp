@@ -23,7 +23,7 @@ DROP TABLE IF EXISTS `bookings`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `bookings` (
   `booking_id` int(11) NOT NULL AUTO_INCREMENT,
-  `customer_id` int(11) NOT NULL,
+  `customer_id` int(11) NULL,
   `service_id` int(11) NOT NULL,
   `email` varchar(100) NOT NULL,
   `booking_date` date NOT NULL,
