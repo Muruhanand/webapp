@@ -39,14 +39,11 @@ form {
 }
 
 .login-form {
-	box-shadow: inset 0px 0px 10px;
-	background-color: #fafafa; 
     list-style: none;
-    padding: 40px;
+    padding: 0;
     display: flex;
     flex-direction: column;
     gap: 10px;
-    border-radius:5px;
 }
 
 .login-form li {
@@ -56,7 +53,7 @@ form {
 }
 
 ul.login-form li label {
-	color:#3163A8;
+	color:#fafafa;
     display: block; 
     margin-bottom: 5px;
 }
@@ -82,4 +79,3 @@ button {
 button:hover {
     background-color: #24304C;
 }
-

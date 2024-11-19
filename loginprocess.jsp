@@ -56,6 +56,7 @@
             if (hashedPassword.equals(storedHashedPassword)) {
             	session.setAttribute("userid",customerid);
             	response.sendRedirect("index.jsp");
+
             } else {
                 response.sendRedirect("<p>Invalid password.</p>");
             }

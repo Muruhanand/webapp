@@ -20,6 +20,7 @@
 			String userEmail = (String) session.getAttribute("userEmail");
 			if (userEmail != null) {
 			%>
+				<li><a href="profilelogic.jsp">Profile</a></li>
 				<li><a href="customerProfile.jsp">Profile</a></li>
 				<li><a href="logout.jsp">Logout</a></li>
 			<%
