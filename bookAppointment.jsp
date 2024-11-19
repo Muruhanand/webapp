@@ -26,10 +26,15 @@
 		ResultSet rs = null;
 		Map<String, List<String[]>> servicesByCategory = new HashMap<>();
 
+		String email;
+		PreparedStatement pstmt2 = null;
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
 			conn = DriverManager.getConnection(connURL);
+
+			
 
 			if (serviceId != null && !serviceId.isEmpty()) {
 				String sqlStr = "SELECT sc.category_name, s.service_name FROM service s "
