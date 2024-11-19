@@ -17,8 +17,7 @@ function populateServices() {
     }
 }
 
-// Set date restrictions
-document.addEventListener('DOMContentLoaded', function() {
+window.addEventListener("DOMContentLoaded", function() {
     var today = new Date();
     var minDate = new Date(today);
     minDate.setDate(today.getDate() + 3);
@@ -27,10 +26,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
     var minDateStr = minDate.toISOString().split('T')[0];
     var maxDateStr = maxDate.toISOString().split('T')[0];
-
+    
     var dateSelector = document.getElementById('dateSelector');
     if (dateSelector) {
         dateSelector.setAttribute('min', minDateStr);
         dateSelector.setAttribute('max', maxDateStr);
     }
+
 });
+
+
+function checkOut() {
+    var checkboxes = document.querySelectorAll('input[name="selectedItems"]');
+    var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+    if (!anyChecked) {
+        checkboxes.forEach(checkbox => checkbox.checked = true);
+    }
+    document.getElementById('checkoutForm').action = 'processCheckout.jsp';
+    document.getElementById('checkoutForm').submit();
+}

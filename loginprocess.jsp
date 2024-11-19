@@ -41,33 +41,26 @@
         conn = DriverManager.getConnection(connURL);
 
         // SQL query to fetch the stored hashed password by email
-        String sql = "SELECT password, customer_id, role FROM user WHERE email = ?";
+        String sql = "SELECT password, customer_id FROM user WHERE email = ?";
 
         pstmt = conn.prepareStatement(sql);
         pstmt.setString(1, email);  // Set the email parameter for the query
 
         rs = pstmt.executeQuery();
-
+        System.out.println("");
         if (rs.next()) {
             String storedHashedPassword = rs.getString("password");
             String customerid = rs.getString("customer_id");
-            String role = rs.getString("role");
 
             // Compare the hashed password entered by the user with the stored hashed password
             if (hashedPassword.equals(storedHashedPassword)) {
-                // Create a User object
-
-                // Set the user object in the session
-                session.setAttribute("userid", customerid);
-                session.setAttribute("role", role);
-
-                // Redirect to the homepage or user dashboard
-                response.sendRedirect("index.jsp");
+            	session.setAttribute("userid",customerid);
+            	response.sendRedirect("index.jsp");
             } else {
-                out.println("<p>Invalid password.</p>");
+                response.sendRedirect("login.jsp?errCode=WrongPassword");
             }
         } else {
-            out.println("<p>No user found with the provided email.</p>");
+            response.sendRedirect("login.jsp?errCode=NoUserFound");
         }
     } catch (Exception e) {
         e.printStackTrace();
