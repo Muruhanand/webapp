@@ -7,27 +7,23 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal"%>
+    <%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal, java.lang.StringBuilder"%>
 <%
-    boolean isNumeric(String str) {
-        return str != null && str.matches("\\d+");
-    }
-
-    String email = request.getParameter("email");
+    String customer_id = "";
+    if(session.getAttribute("userid") != null) {
+		customer_id = (String) session.getAttribute("userid");
+	}else{
+		out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
+	}
     String selectedDate = request.getParameter("selectedDate");
     String selectedTimeStart = request.getParameter("selectedTimeStart");
     String selectedTimeEnd = request.getParameter("selectedTimeEnd");
     String categoryOption = request.getParameter("categoryOptions");
     String serviceOption = request.getParameter("serviceOptions");
+    int numOfHours = 0;
 
     boolean isValid = true;
     StringBuilder errorMessage = new StringBuilder();
-
-    // Validate email
-    if (email == null || email.trim().isEmpty() || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-        isValid = false;
-        errorMessage.append("Invalid email address. ");
-    }
 
     // Validate selectedDate
     if (selectedDate == null || selectedDate.trim().isEmpty()) {
@@ -66,24 +62,32 @@
             Date endTime = sdf.parse(selectedTimeEnd);
 
             long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
-            if (differenceInMilliSeconds < 3600000 || differenceInMilliSeconds % 3600000 != 0) {
+
+            // Calculate the number of hours
+            long differenceInHours = differenceInMilliSeconds / (60 * 60 * 1000);
+
+            // Validate the time difference
+            if (differenceInHours < 1 || differenceInMilliSeconds % (60 * 60 * 1000) != 0) {
                 isValid = false;
                 errorMessage.append("Time difference must be whole hours. ");
+            } else {
+                numOfHours = (int) differenceInHours;
             }
         } catch (ParseException e) {
             isValid = false;
-            errorMessage.append("Invalid time parsing error. ");
+            errorMessage.append("Invalid time format. ");
         }
+
     }
 
     // Validate categoryOption
-    if (categoryOption == null || categoryOption.trim().isEmpty() || !isNumeric(categoryOption)) {
+    if (categoryOption == null || categoryOption.trim().isEmpty() || !categoryOption.matches("\\d+")) {
         isValid = false;
         errorMessage.append("Category selection is required and must be numeric. ");
     }
 
     // Validate serviceOption
-    if (serviceOption == null || serviceOption.trim().isEmpty() || !isNumeric(serviceOption)) {
+    if (serviceOption == null || serviceOption.trim().isEmpty() || !serviceOption.matches("\\d+")) {
         isValid = false;
         errorMessage.append("Service selection is required and must be numeric. ");
     }
@@ -113,14 +117,16 @@
             String priceStr = rs.getString("price");
             BigDecimal price = new BigDecimal(priceStr);
 
-            String sqlInsert = "INSERT INTO booking (service_id, email, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
+            BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(numOfHours));
+
+            String sqlInsert = "INSERT INTO bookings (service_id, customer_id, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
             pstmt = conn.prepareStatement(sqlInsert);
             pstmt.setString(1, serviceId);
-            pstmt.setString(2, email);
+            pstmt.setString(2, customer_id);
             pstmt.setString(3, selectedDate);
             pstmt.setString(4, selectedTimeStart);
             pstmt.setString(5, selectedTimeEnd);
-            pstmt.setBigDecimal(6, price);
+            pstmt.setBigDecimal(6, totalPrice);
             pstmt.executeUpdate();
 
             response.sendRedirect("bookAppointment.jsp?success=Appointment booked successfully.");

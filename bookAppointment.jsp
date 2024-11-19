@@ -26,9 +26,11 @@
 		String serviceId = request.getParameter("serviceid");
 
 		String errMsg = request.getParameter("error");
-		if(errMsg != null || errMsg != ""){
-			out.println("<script>alert('Error: "+ errMsg +"'); window.location.href = 'index.jsp';</script>");
+		System.out.println(errMsg);
+		if (errMsg != null && !errMsg.isEmpty()) {
+    		out.println("<script>alert('Error: " + errMsg.replace("'", "\\'") + "'); window.location.href = 'index.jsp';</script>");
 		}
+
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -112,8 +114,7 @@
 		}
 		%>
 		<div class="mb-3">
-			<label>Cleaning Category:</label> <select id="categoryOptions"
-				class="form-select" onchange="populateServices()">
+			<label>Cleaning Category:</label> <select name="categoryOptions" id="categoryOptions" class="form-select" onchange="populateServices()">
 				<option value="" selected>Select a category</option>
 				<%
 				for (Map.Entry<String, List<String[]>> entry : servicesByCategory.entrySet()) {
@@ -128,8 +129,7 @@
 
 		</div>
 		<div class="mb-3">
-			<label>Service:</label> <select id="serviceOptions"
-				class="form-select"></select>
+			<label>Service:</label> <select id="serviceOptions" class="form-select" name="serviceOptions"></select>
 		</div>
 		<script>
                     var servicesByCategory = {
