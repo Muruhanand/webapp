@@ -1,17 +1,3 @@
-var today = new Date();
-var minDate = new Date(today);
-minDate.setDate(today.getDate() + 3);
-var maxDate = new Date(today);
-maxDate.setMonth(today.getMonth() + 3);
-
-var minDateStr = minDate.toISOString().split('T')[0];
-var maxDateStr = maxDate.toISOString().split('T')[0];
-
-document.getElementById('dateSelector').setAttribute('min', minDateStr);
-document.getElementById('dateSelector').setAttribute('max', maxDateStr);
-
-
-
 function populateServices() {
     var categorySelect = document.getElementById("categoryOptions");
     var serviceSelect = document.getElementById("serviceOptions");
@@ -30,3 +16,21 @@ function populateServices() {
         });
     }
 }
+
+window.addEventListener("DOMContentLoaded", function() {
+    var today = new Date();
+    var minDate = new Date(today);
+    minDate.setDate(today.getDate() + 3);
+    var maxDate = new Date(today);
+    maxDate.setMonth(today.getMonth() + 3);
+
+    var minDateStr = minDate.toISOString().split('T')[0];
+    var maxDateStr = maxDate.toISOString().split('T')[0];
+    
+    var dateSelector = document.getElementById('dateSelector');
+    if (dateSelector) {
+        dateSelector.setAttribute('min', minDateStr);
+        dateSelector.setAttribute('max', maxDateStr);
+    }
+
+});

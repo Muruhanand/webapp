@@ -8,6 +8,10 @@
 <title>Book an Appointment!</title>
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/form.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -16,17 +20,22 @@
 <body>
 	<%@ include file="navbar.jsp"%>
 	<%@page import="java.sql.*"%>
+	<h3 class="display-3 text-center">Book an Appointment with us today!</h3>
 	<form action="appointmentProcess.jsp" method="post">
-		<h3>Book an Appointment with us today!</h3>
 		<%
 		String serviceId = request.getParameter("serviceid");
+
+		String errMsg = request.getParameter("error");
+		if(errMsg != null || errMsg != ""){
+			out.println("<script>alert('Error: "+ errMsg +"'); window.location.href = 'index.jsp';</script>");
+		}
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
 		Map<String, List<String[]>> servicesByCategory = new HashMap<>();
 
-		String email;
+		String email = null;
 		PreparedStatement pstmt2 = null;
 
 		try {
@@ -34,7 +43,26 @@
 			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
 			conn = DriverManager.getConnection(connURL);
 
-			
+			if(session.getAttribute("userid") != null) {
+				String customerid = (String) session.getAttribute("userid");
+				String sqlStr2 = "SELECT email FROM user WHERE customer_id = ?";
+				pstmt2 = conn.prepareStatement(sqlStr2);
+				pstmt2.setString(1, customerid);
+				rs = pstmt2.executeQuery();
+				if (rs.next()) {
+					System.out.println(customerid);
+					email = rs.getString("email");
+					System.out.println(email);
+					%>
+						<div class="mb-3" style="display:none;">
+							<label for="email" class="form-label">Email:</label>
+							<input type="email" class="form-control" id="email" name="email" value="<%=email%>" required>
+						</div>
+					<%
+				}
+			}else{
+				out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
+			}
 
 			if (serviceId != null && !serviceId.isEmpty()) {
 				String sqlStr = "SELECT sc.category_name, s.service_name FROM service s "
@@ -42,15 +70,10 @@
 				pstmt = conn.prepareStatement(sqlStr);
 				pstmt.setString(1, serviceId);
 				rs = pstmt.executeQuery();
-
 				if (rs.next()) {
 			String categoryName = rs.getString("category_name");
 			String serviceName = rs.getString("service_name");
 		%>
-		<div class="mb-3">
-			<label>Email Address:</label> <input type="email"
-				class="form-control">
-		</div>
 		<div class="mb-3">
 			<label>Cleaning Category:</label> <select class="form-select"
 				disabled>
@@ -89,10 +112,6 @@
 		}
 		%>
 		<div class="mb-3">
-			<label>Email Address:</label> <input type="email"
-				class="form-control">
-		</div>
-		<div class="mb-3">
 			<label>Cleaning Category:</label> <select id="categoryOptions"
 				class="form-select" onchange="populateServices()">
 				<option value="" selected>Select a category</option>
@@ -115,8 +134,8 @@
 		<script>
                     var servicesByCategory = {
                         <%for (Map.Entry<String, List<String[]>> entry : servicesByCategory.entrySet()) {
-	String categoryId = entry.getKey();
-	List<String[]> services = entry.getValue();%>
+							String categoryId = entry.getKey();
+							List<String[]> services = entry.getValue();%>
                             "<%=categoryId%>": [
                                 <%for (String[] service : services) {%>
                                     ["<%=service[0]%>", "<%=service[1]%>"],
@@ -162,7 +181,7 @@
 			<label for="timeSelectorEnd" class="form-label">To:</label>
 			<input type="time" class="form-control" id="timeSelectorEnd" name="selectedTimeEnd" min="09:00" max="18:00" required>
 		</div>
-		<button type="submit" class="btn btn-primary mt-3">Submit</button>
+		<button type="submit" class="btn btn-primary mt-3" id="submitBtn">Submit</button>
 	</form>
 	<%@ include file="footer.jsp"%>
 </body>

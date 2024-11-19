@@ -7,134 +7,134 @@
 <title>Insert title here</title>
 </head>
 <body>
-    <%@page import="java.text.SimpleDateFormat"%>  
-    <%@page import="java.util.Date"%>
-    <%@page import="java.sql.*"%>
-    <%@page import="java.text.ParseException"%>
-    <%@page import="java.math.BigDecimal" %>
-	<%
-		String email = request.getParameter("email");
-    	String selectedDate = request.getParameter("selectedDate");
-    	String selectedTimeStart = request.getParameter("selectedTimeStart");
-        String selectedTimeEnd = request.getParameter("selectedTimeEnd");
-    	String categoryOption = request.getParameter("categoryOptions");
-    	String serviceOption = request.getParameter("serviceOptions");
-    	
-    	boolean isValid = true;
-        StringBuilder validationMessage = new StringBuilder();
+    <%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal"%>
+<%
+    boolean isNumeric(String str) {
+        return str != null && str.matches("\\d+");
+    }
 
-        // Validate email
-        if (email == null || email.trim().isEmpty() || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
-            isValid = false;
-            response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Invalid email address.");
-        }
+    String email = request.getParameter("email");
+    String selectedDate = request.getParameter("selectedDate");
+    String selectedTimeStart = request.getParameter("selectedTimeStart");
+    String selectedTimeEnd = request.getParameter("selectedTimeEnd");
+    String categoryOption = request.getParameter("categoryOptions");
+    String serviceOption = request.getParameter("serviceOptions");
 
-        if (selectedDate == null || selectedDate.trim().isEmpty()) {
-            isValid = false;
-            response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Date is required.");
-        }
+    boolean isValid = true;
+    StringBuilder errorMessage = new StringBuilder();
 
-        if (selectedTimeStart == null || selectedTimeStart.trim().isEmpty()) {
-            isValid = false;
-            response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Starting time is required.");
-        }
+    // Validate email
+    if (email == null || email.trim().isEmpty() || !email.matches("^[\\w.%+-]+@[\\w.-]+\\.[a-zA-Z]{2,}$")) {
+        isValid = false;
+        errorMessage.append("Invalid email address. ");
+    }
 
-        if (selectedTimeEnd == null || selectedTimeEnd.trim().isEmpty()) {
+    // Validate selectedDate
+    if (selectedDate == null || selectedDate.trim().isEmpty()) {
+        isValid = false;
+        errorMessage.append("Date is required. ");
+    } else {
+        try {
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            sdf.setLenient(false); // Strict parsing
+            Date date = sdf.parse(selectedDate);
+        } catch (ParseException e) {
             isValid = false;
-            response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Starting time is required.");
+            errorMessage.append("Invalid date format (expected yyyy-MM-dd). ");
         }
-        
-        if (isValid) {
-            try {
+    }
+
+    // Validate selectedTimeStart and selectedTimeEnd
+    if (selectedTimeStart == null || selectedTimeStart.trim().isEmpty()) {
+        isValid = false;
+        errorMessage.append("Starting time is required. ");
+    } else if (!selectedTimeStart.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
+        isValid = false;
+        errorMessage.append("Invalid start time format (expected HH:mm). ");
+    }
+
+    if (selectedTimeEnd == null || selectedTimeEnd.trim().isEmpty()) {
+        isValid = false;
+        errorMessage.append("Ending time is required. ");
+    } else if (!selectedTimeEnd.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
+        isValid = false;
+        errorMessage.append("Invalid end time format (expected HH:mm). ");
+    } else if (isValid) {
+        try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             Date startTime = sdf.parse(selectedTimeStart);
             Date endTime = sdf.parse(selectedTimeEnd);
 
             long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
-            long differenceInHours = differenceInMilliSeconds / (60 * 60 * 1000);
-
-            if (differenceInHours < 1 || differenceInMilliSeconds % (60 * 60 * 1000) != 0) {
+            if (differenceInMilliSeconds < 3600000 || differenceInMilliSeconds % 3600000 != 0) {
                 isValid = false;
-                response.sendRedirect("bookAppointment.jsp?serviceid=" + serviceOption + "&error=Time difference must be whole hours.");
+                errorMessage.append("Time difference must be whole hours. ");
             }
-            } catch (ParseException e) {
-            	isValid = false;
-            	response.sendRedirect("bookAppointment.jsp?serviceid=" + serviceOption + "&error=Invalid time format.");
-            }
-        }
-
-        // Validate category option
-        if (categoryOption == null || categoryOption.trim().isEmpty()) {
+        } catch (ParseException e) {
             isValid = false;
-            response.sendRedirect("bookAppointment.jsp?serviceid="+serviceOption+"&error=Category selection is required.");
+            errorMessage.append("Invalid time parsing error. ");
         }
+    }
 
-        // Validate service option
-        if (serviceOption == null || serviceOption.trim().isEmpty()) {
-            isValid = false;
-            response.sendRedirect("bookAppointment.jsp?error=Service selection is required.");
+    // Validate categoryOption
+    if (categoryOption == null || categoryOption.trim().isEmpty() || !isNumeric(categoryOption)) {
+        isValid = false;
+        errorMessage.append("Category selection is required and must be numeric. ");
+    }
+
+    // Validate serviceOption
+    if (serviceOption == null || serviceOption.trim().isEmpty() || !isNumeric(serviceOption)) {
+        isValid = false;
+        errorMessage.append("Service selection is required and must be numeric. ");
+    }
+
+    if (!isValid) {
+        response.sendRedirect("bookAppointment.jsp?serviceid=" + serviceOption + "&error=" + errorMessage.toString().trim());
+        return;
+    }
+
+    // Proceed with booking
+    Connection conn = null;
+    PreparedStatement pstmt = null;
+    ResultSet rs = null;
+
+    try {
+        Class.forName("com.mysql.cj.jdbc.Driver");
+        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        conn = DriverManager.getConnection(connURL);
+
+        String sqlStr = "SELECT * FROM service WHERE service_id = ?";
+        pstmt = conn.prepareStatement(sqlStr);
+        pstmt.setString(1, serviceOption);
+        rs = pstmt.executeQuery();
+
+        if (rs.next()) {
+            String serviceId = rs.getString("service_id");
+            String priceStr = rs.getString("price");
+            BigDecimal price = new BigDecimal(priceStr);
+
+            String sqlInsert = "INSERT INTO booking (service_id, email, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
+            pstmt = conn.prepareStatement(sqlInsert);
+            pstmt.setString(1, serviceId);
+            pstmt.setString(2, email);
+            pstmt.setString(3, selectedDate);
+            pstmt.setString(4, selectedTimeStart);
+            pstmt.setString(5, selectedTimeEnd);
+            pstmt.setBigDecimal(6, price);
+            pstmt.executeUpdate();
+
+            response.sendRedirect("bookAppointment.jsp?success=Appointment booked successfully.");
+        } else {
+            response.sendRedirect("bookAppointment.jsp?error=Service not found.");
         }
-        Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
-		ResultSet rsUser = null;
-		PreparedStatement pstmt2 = null;
-
-        try{
-            Class.forName("com.mysql.cj.jdbc.Driver");
-			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
-			conn = DriverManager.getConnection(connURL);
-            String sqlStr = "SELECT * FROM service WHERE service_id = ?";
-            pstmt = conn.prepareStatement(sqlStr);
-            pstmt.setString(1, serviceOption);
-            rs = pstmt.executeQuery();
-            String sqlStr2 = "SELECT customer_id FROM user where ";
-
-            if (rs.next()) {
-                String serviceId = rs.getString("service_id");
-                String serviceName = rs.getString("service_name");
-                String categoryId = rs.getString("category_id");
-                String priceStr = rs.getString("price");
-                BigDecimal price = new BigDecimal(priceStr);
-
-                String sqlStrInsert = "INSERT INTO booking (service_id, email, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
-                pstmt = conn.prepareStatement(sqlStrInsert);
-                pstmt.setString(2, email);
-                pstmt.setString(1, serviceId);
-                pstmt.setString(3, selectedDate);
-                pstmt.setString(4, selectedTimeStart);
-                pstmt.setString(5, selectedTimeEnd);
-                pstmt.setBigDecimal(6, price);
-                pstmt.executeUpdate();
-                response.sendRedirect("bookAppointment.jsp?success=Appointment booked successfully.");
-            } else {
-                response.sendRedirect("bookAppointment.jsp?error=Service not found.");
-            }
-            
-        }catch (Exception e) {
-		out.println("Error: " + e.getMessage());
-        }finally{
-            if (rs != null)
-		        try {
-			        rs.close();
-		    } catch (SQLException e) {
-			    e.printStackTrace();
-		    }
-		    if (pstmt != null)
-		    try {
-			    pstmt.close();
-		    } catch (SQLException e) {
-			    e.printStackTrace();
-		    }
-		    if (conn != null)
-		    try {
-			    conn.close();
-		    } catch (SQLException e) {
-			    e.printStackTrace();
-		    }
-        }
-
-	%>
+    } catch (Exception e) {
+        response.sendRedirect("bookAppointment.jsp?error=Error occurred: " + e.getMessage());
+    } finally {
+        if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
+        if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
+        if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+    }
+%>
 	
 </body>
 </html>
