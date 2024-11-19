@@ -77,6 +77,8 @@
         Connection conn = null;
 		PreparedStatement pstmt = null;
 		ResultSet rs = null;
+		ResultSet rsUser = null;
+		PreparedStatement pstmt2 = null;
 
         try{
             Class.forName("com.mysql.cj.jdbc.Driver");
@@ -86,6 +88,7 @@
             pstmt = conn.prepareStatement(sqlStr);
             pstmt.setString(1, serviceOption);
             rs = pstmt.executeQuery();
+            String sqlStr2 = "SELECT customer_id FROM user where ";
 
             if (rs.next()) {
                 String serviceId = rs.getString("service_id");

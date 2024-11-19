@@ -17,8 +17,8 @@
 			<li><a href="cart.jsp">Cart</a></li>
 
 			<%
-			String userEmail = (String) session.getAttribute("userEmail");
-			if (userEmail != null) {
+			String userid = (String) session.getAttribute("userid");
+			if (userid != null) {
 			%>
 				<li><a href="profilelogic.jsp">Profile</a></li>
 				<li><a href="customerProfile.jsp">Profile</a></li>

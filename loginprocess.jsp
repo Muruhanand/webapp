@@ -56,12 +56,11 @@
             if (hashedPassword.equals(storedHashedPassword)) {
             	session.setAttribute("userid",customerid);
             	response.sendRedirect("index.jsp");
-
             } else {
-                response.sendRedirect("<p>Invalid password.</p>");
+                response.sendRedirect("login.jsp?errCode=WrongPassword");
             }
         } else {
-            out.println("<p>No user found with the provided email.</p>");
+            response.sendRedirect("login.jsp?errCode=NoUserFound");
         }
     } catch (Exception e) {
         e.printStackTrace();
