@@ -1,0 +1,219 @@
+<%@ page import="java.sql.*"%>
+<%@ page import="java.security.MessageDigest"%>
+<%@ page import="java.security.NoSuchAlgorithmException"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Users List</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+    <div class="flex min-h-screen p-4">
+        <%@ include file="components/adminSideBar/adminSideBar.jsp"%>
+        <div class="flex-1">
+            <%@ include file="components/adminNavbar/adminNavbar.jsp"%>
+            <div class="font-bold text-3xl py-2">Users List</div>
+
+            <!-- User List Content -->
+            <div class="p-6">
+                <div class="bg-white rounded-lg shadow-sm">
+                    <div class="p-6">                    
+                        <!-- Header Section -->
+                        <div class="flex justify-between items-center mb-6">
+                            <h2 class="text-xl font-bold">All users</h2>
+                            <div class="flex gap-2">
+                                <button class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
+                                    <i class="fas fa-plus"></i> Add user
+                                </button>
+                                <button class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 flex items-center gap-2">
+                                    <i class="fas fa-file-export"></i> Export
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Search and Page Size Section -->
+                        <div class="flex justify-between items-center mb-6">
+                            <div class="relative flex-1 max-w-md">
+                                <input type="text" placeholder="Search for users"
+                                    class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500">
+                                <i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
+                            </div>
+                            <div class="flex items-center gap-3">
+                                <span class="text-sm text-gray-600">Show</span>
+                                <select id="pageSize" onchange="changePageSize(this.value)" 
+                                        class="border rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500">
+                                    <option value="10">10</option>
+                                    <option value="25">25</option>
+                                    <option value="50">50</option>
+                                    <option value="100">100</option>
+                                </select>
+                                <span class="text-sm text-gray-600">entries</span>
+                            </div>
+                        </div>
+
+                        <!-- Table -->
+                        <div class="overflow-x-auto">
+                            <table class="w-full">
+                                <thead>
+                                    <tr class="text-left text-gray-500 text-sm border-b">
+                                        <th class="pb-4 font-medium">NAME</th>
+                                        <th class="pb-4 font-medium">PHONE NUMBER</th>
+                                        <th class="pb-4 font-medium">ROLE</th>
+                                        <th class="pb-4 font-medium">STATUS</th>
+                                        <th class="pb-4 font-medium text-right">ACTIONS</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <%
+                                    Connection conn = null;
+                                    PreparedStatement pstmt = null;
+                                    ResultSet rs = null;
+                                    ResultSet countRs = null;
+                                    int totalRecords = 0;
+                                    int totalPages = 0;
+                                    int pageSize = 10;
+                                    int currentPage = 1;
+                                    int offset = 0;
+
+                                    try {
+                                        // Get pagination parameters
+                                        String pageSizeParam = request.getParameter("pageSize");
+                                        if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
+                                            pageSize = Integer.parseInt(pageSizeParam);
+                                        }
+                                        
+                                        String pageParam = request.getParameter("page");
+                                        if (pageParam != null && !pageParam.isEmpty()) {
+                                            currentPage = Integer.parseInt(pageParam);
+                                        }
+                                        
+                                        offset = (currentPage - 1) * pageSize;
+                                        
+                                        // Database connection
+                                        Class.forName("com.mysql.cj.jdbc.Driver");
+                                        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
+                                        conn = DriverManager.getConnection(connURL);
+                                        
+                                        // Get total count
+                                        String countSql = "SELECT COUNT(*) as total FROM user";
+                                        PreparedStatement countStmt = conn.prepareStatement(countSql);
+                                        countRs = countStmt.executeQuery();
+                                        if (countRs.next()) {
+                                            totalRecords = countRs.getInt("total");
+                                        }
+                                        totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+                                        
+                                        // Get paginated data
+                                        String sqlStr = "SELECT first_name, last_name, email, phone_number, admin FROM user LIMIT ?";
+                                        pstmt = conn.prepareStatement(sqlStr);
+                                        pstmt.setInt(1, pageSize);
+                                        rs = pstmt.executeQuery();
+                                        
+                                        while (rs.next()) {
+                                            String firstName = rs.getString("first_name");
+                                            String lastName = rs.getString("last_name");
+                                            String email = rs.getString("email");
+                                            String phoneNumber = rs.getString("phone_number");
+                                            boolean isAdmin = rs.getBoolean("admin");
+                                    %>
+                                    <tr class="border-b">
+                                        <td class="py-4">
+                                            <div class="flex items-center gap-3">
+                                                <div>
+                                                    <div class="font-medium"><%=firstName + " " + lastName%></div>
+                                                    <div class="text-sm text-gray-500"><%=email%></div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="py-4"><%=phoneNumber%></td>
+                                        <td class="py-4"><%=isAdmin ? "Admin" : "User"%></td>
+                                        <td class="py-4">
+                                            <span class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
+                                                Active
+                                            </span>
+                                        </td>
+                                        <td class="py-4">
+                                            <div class="flex justify-end gap-3">
+                                                <button class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                                <button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                    <%
+                                        }
+                                    } catch (Exception e) {
+                                        System.err.println("Error: " + e.getMessage());
+                                    } finally {
+                                        try {
+                                            if (rs != null) rs.close();
+                                            if (countRs != null) countRs.close();
+                                            if (pstmt != null) pstmt.close();
+                                            if (conn != null) conn.close();
+                                        } catch (SQLException e) {
+                                            System.err.println("Error closing resources: " + e.getMessage());
+                                        }
+                                    }
+                                    %>
+                                </tbody>
+                                <tfoot>
+                                    <tr>
+                                        <td colspan="5" class="pt-4">
+                                            <div class="flex justify-between items-center">
+                                                <div class="text-sm text-gray-500">
+    												Showing 1 to <%= Math.min(pageSize, totalRecords) %> of <%= totalRecords %> entries
+												</div>
+                                                <div class="flex gap-2">
+                                                    <% if (currentPage > 1) { %>
+                                                        <a href="?page=<%= currentPage - 1 %>&pageSize=<%= pageSize %>" 
+                                                           class="px-3 py-1 border rounded hover:bg-gray-50">Previous</a>
+                                                    <% } %>
+                                                    
+                                                    <% for (int i = 1; i <= totalPages; i++) { %>
+                                                        <a href="?page=<%= i %>&pageSize=<%= pageSize %>" 
+                                                           class="px-3 py-1 border rounded <%= i == currentPage ? "bg-blue-600 text-white" : "hover:bg-gray-50" %>">
+                                                            <%= i %>
+                                                        </a>
+                                                    <% } %>
+                                                    
+                                                    <% if (currentPage < totalPages) { %>
+                                                        <a href="?page=<%= currentPage + 1 %>&pageSize=<%= pageSize %>" 
+                                                           class="px-3 py-1 border rounded hover:bg-gray-50">Next</a>
+                                                    <% } %>
+                                                </div>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                </tfoot>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    function changePageSize(size) {
+        const url = new URL(window.location.href);
+        url.searchParams.set('pageSize', size);
+        url.searchParams.set('page', '1'); // Reset to first page
+        window.location.href = url.toString();
+    }
+    
+    // Set selected page size in dropdown
+    document.addEventListener('DOMContentLoaded', function() {
+        const urlParams = new URLSearchParams(window.location.search);
+        const pageSize = urlParams.get('pageSize') || '10';
+        document.getElementById('pageSize').value = pageSize;
+    });
+    </script>
+</body>
+</html>
