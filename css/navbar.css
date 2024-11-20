@@ -2,11 +2,11 @@
 nav ul.navbar-menu {
     display: flex;
     list-style-type: none;
-    width: 100% !important;
+    width: 100%;
     margin: 0;
     padding: 0;
     overflow: hidden;
-    background-color: #24304C;
+    background-color: #24304C; 
     justify-content: space-evenly;
 }
 
@@ -17,7 +17,7 @@ nav ul.navbar-menu li a {
     text-align: center;
     padding: 14px 20px;
     text-decoration: none;
-    background-color: #24304C;
+   background-color: #24304C;
     transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease;
 }
 

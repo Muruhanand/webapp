@@ -47,24 +47,20 @@
         pstmt.setString(1, email);  // Set the email parameter for the query
 
         rs = pstmt.executeQuery();
-
+        System.out.println("");
         if (rs.next()) {
             String storedHashedPassword = rs.getString("password");
             String customerid = rs.getString("customer_id");
 
             // Compare the hashed password entered by the user with the stored hashed password
             if (hashedPassword.equals(storedHashedPassword)) {
-            	session.setAttribute("userEmail", email);
             	session.setAttribute("userid",customerid);
             	response.sendRedirect("index.jsp");
-
-                // You can redirect to a user dashboard or homepage here
-                // response.sendRedirect("dashboard.jsp");
             } else {
-                out.println("<p>Invalid password.</p>");
+                response.sendRedirect("login.jsp?errCode=WrongPassword");
             }
         } else {
-            out.println("<p>No user found with the provided email.</p>");
+            response.sendRedirect("login.jsp?errCode=NoUserFound");
         }
     } catch (Exception e) {
         e.printStackTrace();

@@ -1,0 +1,22 @@
+
+.service-details, .category-details {
+    padding: 50px;
+    margin-top: 50px;
+    margin-bottom: 50px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: #24304c;
+    border-radius: 5px;
+    border-width: 15px;
+    border-color: #3163A8;
+    color: #fafafa;
+    width: 50%;
+    height: 400px;
+}
+
+.details-container, .category-container {
+    display: flex;
+    flex-direction: row wrap;
+    justify-content: center;
+    align-items: center;
+}

@@ -1,0 +1,76 @@
+body, html {
+	height: 100%;
+	margin: 0;
+}
+
+.form-wrapper {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	box-sizing: border-box;
+	min-height: 85vh; /* Updated to cover full viewport height */
+}
+
+.container {
+	width: 50%;
+	padding: 20px;
+	border: 2px solid rgb(0, 88, 113);
+	box-sizing: border-box;
+	background-color: #f9f9f9;
+	border-radius: 25px;
+}
+
+.tab {
+	display: flex;
+	justify-content: space-around;
+	margin-bottom: 20px;
+}
+
+.tablink {
+	background-color: #B5C9CC;
+	border: none;
+	padding: 10px 20px;
+	cursor: pointer;
+	font-size: 16px;
+}
+
+.tablink.active {
+	background-color: #24304C;
+	color: white;
+}
+
+.form-container {
+	display: none;
+}
+
+.form-container.active {
+	display: block;
+}
+
+input[type="text"], input[type="password"], input[type="email"] {
+	width: 100%;
+	padding: 10px;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+}
+
+li {
+	margin-right: 20px;
+}
+
+button {
+	width: 100%;
+	padding: 10px;
+	background-color: #B5C9CC;
+	color: #fff;
+	border: none;
+	border-radius: 5px;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+button:hover {
+	background-color: #7B9AB9;
+}
+
+

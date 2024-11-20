@@ -13,6 +13,10 @@
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
+	  <% 
+        String userId = (String) session.getAttribute("userid");
+		System.out.println("User ID: "+userId);
+    %>
 	<!-- Hero Section -->
 	<section id="hero">
 		<div class="hero-content">
