@@ -146,7 +146,7 @@ DROP TABLE IF EXISTS `user`;
  SET character_set_client = utf8mb4 ;
 CREATE TABLE `user` (
   `customer_id` int(11) NOT NULL AUTO_INCREMENT,
-  `admin` tinyint(1) NOT NULL,
+  `role` varchar(50) DEFAULT 'member',
   `first_name` varchar(50) NOT NULL,
   `last_name` varchar(50) NOT NULL,
   `email` varchar(100) NOT NULL,
@@ -165,7 +165,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES (1,1,'a','a','admin@gmail.com','81136589','aaa','9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0','2024-11-11 05:04:15'),(2,0,'a','a','jovanyeo.jyzr@gmail.com','81136589','aaa','9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0','2024-11-11 05:04:15');
+INSERT INTO `user` VALUES (1,'Admin','a','a','admin@gmail.com','81136589','aaa','9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0','2024-11-11 05:04:15'),(2,'member','kyo111','rem1','jovanyeo.jyzr@gmail.com','81136589','moms hse2','9834876dcfb05cb167a5c24953eba58c4ac89b1adf57f28f2f9d09af107ee8f0','2024-11-11 05:04:15');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -178,4 +178,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-11-19 23:15:01
+-- Dump completed on 2024-11-20 22:24:27

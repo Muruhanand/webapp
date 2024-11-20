@@ -21,9 +21,9 @@
 		<h2>Service Details</h2>
 		<%
 		String categoryid = request.getParameter("categoryid");
-		Connection conn = null;
-		PreparedStatement pstmt = null;
-		ResultSet rs = null;
+		Connection conn1 = null;
+		PreparedStatement pstmt1 = null;
+		ResultSet rs1 = null;
 
 		try {
 			// Step 1: Load JDBC Driver
@@ -33,15 +33,15 @@
 			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
 
 			// Step 3: Establish connection to URL
-			conn = DriverManager.getConnection(connURL);
+			conn1 = DriverManager.getConnection(connURL);
 
 			// Step 4: Create PreparedStatement object
 			String sqlStr = "SELECT service_id, service_name, description FROM service WHERE category_id = ?";
-			pstmt = conn.prepareStatement(sqlStr);
+			pstmt = conn1.prepareStatement(sqlStr);
 			pstmt.setString(1, categoryid); // Assuming category is a string, adjust if it's an integer
 
 			// Step 5: Execute SQL Command
-			rs = pstmt.executeQuery();
+			rs1 = pstmt1.executeQuery();
 
 			// Step 6: Process Result
 			while (rs.next()) {
@@ -61,21 +61,21 @@
 		System.err.println("Error :" + e);
 		} finally {
 		// Step 7: Close resources
-		if (rs != null)
+		if (rs1 != null)
 		try {
-			rs.close();
+			rs1.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (pstmt != null)
+		if (pstmt1 != null)
 		try {
-			pstmt.close();
+			pstmt1.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		if (conn != null)
+		if (conn1 != null)
 		try {
-			conn.close();
+			conn1.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
