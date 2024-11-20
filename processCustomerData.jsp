@@ -40,21 +40,22 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Connect to the database
-        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         // SQL statement for inserting customer data with NOW() for created_at
-        String sql = "INSERT INTO user (first_name, last_name, email, phone_number, address, password, created_at) VALUES (?, ?, ?, ?, ?, ?, NOW())";
+        String sql = "INSERT INTO user (admin, first_name, last_name, email, phone_number, address, password, created_at) VALUES (?, ?, ?, ?, ?, ?, ?, NOW())";
 
         pstmt = conn.prepareStatement(sql);
 
         // Set parameters for the prepared statement (excluding created_at)
-        pstmt.setString(1, firstName);
-        pstmt.setString(2, lastName);
-        pstmt.setString(3, email);
-        pstmt.setString(4, phoneNumber);
-        pstmt.setString(5, address);
-        pstmt.setString(6, hashedPassword);  // Store the hashed password
+        pstmt.setInt(1, 1);
+        pstmt.setString(2, firstName);
+        pstmt.setString(3, lastName);
+        pstmt.setString(4, email);
+        pstmt.setString(5, phoneNumber);
+        pstmt.setString(6, address);
+        pstmt.setString(7, hashedPassword);  // Store the hashed password
 
         // Execute the insert operation
         int rows = pstmt.executeUpdate();
