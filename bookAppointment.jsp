@@ -26,11 +26,22 @@
 		String serviceId = request.getParameter("serviceid");
 
 		String errMsg = request.getParameter("error");
-		System.out.println(errMsg);
 		if (errMsg != null && !errMsg.isEmpty()) {
-    		out.println("<script>alert('Error: " + errMsg.replace("'", "\\'") + "'); window.location.href = 'index.jsp';</script>");
+    		%>
+			<div class="alert alert-danger" role="alert">
+				<%=errMsg%>
+			</div>
+			<%
 		}
 
+		String succMsg = request.getParameter("success");
+		if (succMsg != null && !succMsg.isEmpty()) {
+    		%>
+			<div class="alert alert-success" role="alert">
+				<%=succMsg%>
+			</div>
+			<%
+		}
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
