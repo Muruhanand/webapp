@@ -108,24 +108,26 @@
 									</tr>
 								</thead>
 								<tbody>
-									<%!int getPageSize(String size, int total) {
-		try {
-			int val = Integer.parseInt(size);
-			return (val > 0 && val <= 100) ? val : 10; // Max 100, default 10
-		} catch (Exception e) {
-			return 10;
-		}
-	}
+									<%!
+									int getPageSize(String size, int total) {
+										try {
+											int val = Integer.parseInt(size);
+											return (val > 0 && val <= 100) ? val : 10; // Max 100, default 10
+										} catch (Exception e) {
+											return 10;
+										}
+									}
 
-	int getPageNumber(String page, int total, int size) {
-		try {
-			int val = Integer.parseInt(page);
-			int maxPages = Math.max(1, (int) Math.ceil((double) total / size));
-			return Math.min(Math.max(1, val), maxPages);
-		} catch (Exception e) {
-			return 1;
-		}
-	}%>
+									int getPageNumber(String page, int total, int size) {
+										try {
+											int val = Integer.parseInt(page);
+											int maxPages = Math.max(1, (int) Math.ceil((double) total / size));
+											return Math.min(Math.max(1, val), maxPages);
+										} catch (Exception e) {
+											return 1;
+										}
+									}
+									%>
 									<%
 									Connection conn = null;
 									PreparedStatement pstmt = null;
