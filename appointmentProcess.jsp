@@ -11,10 +11,12 @@
 <%
     String customer_id = "";
     if(session.getAttribute("userid") != null) {
-		customer_id = (String) session.getAttribute("userid");
-	}else{
-		out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
-	}
+        customer_id = (String) session.getAttribute("userid");
+    } else {
+        out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
+        return;
+    }
+
     String selectedDate = request.getParameter("selectedDate");
     String selectedTimeStart = request.getParameter("selectedTimeStart");
     String selectedTimeEnd = request.getParameter("selectedTimeEnd");
@@ -62,8 +64,6 @@
             Date endTime = sdf.parse(selectedTimeEnd);
 
             long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
-
-            // Calculate the number of hours
             long differenceInHours = differenceInMilliSeconds / (60 * 60 * 1000);
 
             // Validate the time difference
@@ -77,7 +77,6 @@
             isValid = false;
             errorMessage.append("Invalid time format. ");
         }
-
     }
 
     // Validate categoryOption
@@ -104,7 +103,8 @@
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+
         conn = DriverManager.getConnection(connURL);
 
         String sqlStr = "SELECT * FROM service WHERE service_id = ?";
@@ -128,7 +128,6 @@
             pstmt.setString(5, selectedTimeEnd);
             pstmt.setBigDecimal(6, totalPrice);
             pstmt.executeUpdate();
-
             response.sendRedirect("bookAppointment.jsp?success=Appointment booked successfully.");
         } else {
             response.sendRedirect("bookAppointment.jsp?error=Service not found.");
@@ -141,6 +140,5 @@
         if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
     }
 %>
-	
 </body>
 </html>
