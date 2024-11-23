@@ -1,3 +1,4 @@
+
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8" import="java.sql.*, java.util.*"%>
 <!DOCTYPE html>
@@ -12,6 +13,10 @@
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com">
+<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+
 <link
 	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
 	rel="stylesheet">
@@ -21,27 +26,18 @@
 	<%@ include file="navbar.jsp"%>
 	<%@page import="java.sql.*"%>
 	<h3 class="display-3 text-center">Book an Appointment with us today!</h3>
+	<h3 class="display-3 text-center">Book an Appointment with us today!</h3>
 	<form action="appointmentProcess.jsp" method="post">
 		<%
 		String serviceId = request.getParameter("serviceid");
 
 		String errMsg = request.getParameter("error");
+		System.out.println(errMsg);
 		if (errMsg != null && !errMsg.isEmpty()) {
-    		%>
-			<div class="alert alert-danger" role="alert">
-				<%=errMsg%>
-			</div>
-			<%
+    		out.println("<script>alert('Error: " + errMsg.replace("'", "\\'") + "'); window.location.href = 'index.jsp';</script>");
 		}
 
-		String succMsg = request.getParameter("success");
-		if (succMsg != null && !succMsg.isEmpty()) {
-    		%>
-			<div class="alert alert-success" role="alert">
-				<%=succMsg%>
-			</div>
-			<%
-		}
+
 
 		Connection conn = null;
 		PreparedStatement pstmt = null;
@@ -51,10 +47,33 @@
 		String email = null;
 		PreparedStatement pstmt2 = null;
 
+
+
 		try {
 			Class.forName("com.mysql.cj.jdbc.Driver");
-			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+			String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
 			conn = DriverManager.getConnection(connURL);
+
+			if(session.getAttribute("userid") != null) {
+				String customerid = (String) session.getAttribute("userid");
+				String sqlStr2 = "SELECT email FROM user WHERE customer_id = ?";
+				pstmt2 = conn.prepareStatement(sqlStr2);
+				pstmt2.setString(1, customerid);
+				rs = pstmt2.executeQuery();
+				if (rs.next()) {
+					System.out.println(customerid);
+					email = rs.getString("email");
+					System.out.println(email);
+					%>
+						<div class="mb-3" style="display:none;">
+							<label for="email" class="form-label">Email:</label>
+							<input type="email" class="form-control" id="email" name="email" value="<%=email%>" required>
+						</div>
+					<%
+				}
+			}else{
+				out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
+			}
 
 			if(session.getAttribute("userid") != null) {
 				String customerid = (String) session.getAttribute("userid");
@@ -112,33 +131,39 @@
 		servicesByCategory.put(categoryId, new ArrayList<>());
 		}
 
-		String sqlStrServices = "SELECT category_id, service_id, service_name FROM service";
-		pstmt = conn.prepareStatement(sqlStrServices);
-		rs = pstmt.executeQuery();
+		 String sqlStrServices = "SELECT s.category_id, s.service_id, s.service_name, c.category_name FROM service s JOIN service_category c ON s.category_id = c.category_id ORDER BY c.category_id";
+         pstmt = conn.prepareStatement(sqlStrServices);
+         rs = pstmt.executeQuery();
 
-		while (rs.next()) {
-		String categoryId = rs.getString("category_id");
-		String serviceIdFromDb = rs.getString("service_id");
-		String serviceName = rs.getString("service_name");
+         while (rs.next()) {
+             String categoryId = rs.getString("category_id");
+             String serviceIdFromDb = rs.getString("service_id");
+             String serviceName = rs.getString("service_name");
+             String categoryName = rs.getString("category_name");
 
-		servicesByCategory.get(categoryId).add(new String[]{serviceIdFromDb, serviceName});
+             servicesByCategory.get(categoryId).add(new String[]{serviceIdFromDb, serviceName, categoryName});
 		}
 		%>
 		<div class="mb-3">
-			<label>Cleaning Category:</label> <select name="categoryOptions" id="categoryOptions" class="form-select" onchange="populateServices()">
-				<option value="" selected>Select a category</option>
-				<%
-				for (Map.Entry<String, List<String[]>> entry : servicesByCategory.entrySet()) {
-					String categoryId = entry.getKey();
-					String categoryName = entry.getValue().get(0)[1]; // Assuming the first entry has the category name
-				%>
-				<option value="<%=categoryId%>"><%=categoryName%></option>
-				<%
-				}
-				%>
-			</select>
-
-		</div>
+    <label>Cleaning Category:</label>
+    <select name="categoryOptions" id="categoryOptions" class="form-select" onchange="populateServices()">
+        <option value="" selected>Select a category</option>
+        <%
+        if (servicesByCategory != null && !servicesByCategory.isEmpty()) {
+            for (Map.Entry<String, List<String[]>> entry : servicesByCategory.entrySet()) {
+                String categoryId = entry.getKey();
+                List<String[]> categories = entry.getValue();
+                if (categories != null && !categories.isEmpty()) {
+                    String categoryName = categories.get(0)[2]; // Assuming the first entry has the category name
+        %>
+                    <option value="<%=categoryId%>"><%=categoryName%></option>
+        <%
+                }
+            }
+        }
+        %>
+    </select>
+</div>
 		<div class="mb-3">
 			<label>Service:</label> <select id="serviceOptions" class="form-select" name="serviceOptions"></select>
 		</div>
