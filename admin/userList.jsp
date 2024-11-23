@@ -2,6 +2,7 @@
 <%@ page import="java.security.MessageDigest"%>
 <%@ page import="java.security.NoSuchAlgorithmException"%>
 <%@ include file="components/modals/userModal.jsp"%>
+<%@ include file="components/modals/confirmationModal.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -140,7 +141,7 @@
 										totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
 										// Get paginated data
-										String sqlStr = "SELECT customer_id, first_name, last_name, email, phone_number, address, admin FROM user LIMIT ?";
+										String sqlStr = "SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user LIMIT ?";
 										pstmt = conn.prepareStatement(sqlStr);
 										pstmt.setInt(1, pageSize);
 										rs = pstmt.executeQuery();
@@ -154,6 +155,7 @@
 											String address = rs.getString("address");
 											System.out.println(address);
 											boolean isAdmin = rs.getBoolean("admin");
+											boolean userStatus = rs.getBoolean("status");
 									%>
 									<tr class="border-b">
 										<td class="py-4">
@@ -167,8 +169,9 @@
 										<td class="py-4"><%=phoneNumber%></td>
 										<td class="py-4"><%=isAdmin ? "Admin" : "User"%></td>
 										<td class="py-4"><span
-											class="px-2 py-1 bg-green-100 text-green-800 rounded-full text-sm">
-												Active </span></td>
+											class="px-2 py-1 <%=userStatus ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"%> rounded-full text-sm w-32 inline-flex items-center">
+												<i class="fas fa-circle text-xs mr-2"></i> <%=userStatus ? "Enabled" : "Disabled"%>
+										</span></td>
 										<td class="py-4">
 											<div class="flex justify-end gap-3">
 												<button
@@ -185,8 +188,9 @@
 													class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
 													<i class="fas fa-edit"></i>
 												</button>
-												<button class="p-2 text-red-600 hover:bg-red-50 rounded-lg">
-													<i class="fas fa-trash"></i>
+												<button class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
+													onclick="openDeactivationModal(<%=userId%>, <%=userStatus%>)">
+													<i class="fas <%=userStatus ? "fa-user-slash" : "fa-user-check"%>"></i>
 												</button>
 											</div>
 										</td>
