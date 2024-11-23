@@ -17,7 +17,6 @@
                 <button class="tablink" onclick="openTab('register')">Register</button>
             </div>
 
-            <!-- Login Form -->
             <div id="login" class="form-container">
                 <form action="loginprocess.jsp" method="post">
                     <ul class="login-form">
