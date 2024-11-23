@@ -7,3 +7,27 @@ form{
 	margin:100px;
 	padding:40px;
 }
+
+ .list-group-item {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+
+ .checkbox-container {
+        flex: 0 0 auto;
+        margin-right: 15px; /* Adjust as needed */
+    }
+
+.info-container {
+        flex-grow: 1;
+    }
+
+.action-container {
+        display: flex;
+        gap: 10px; /* Add space between the buttons */
+    }
+.form-check-input {
+	border:3px solid #24304C;
+
+}
