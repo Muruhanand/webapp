@@ -109,7 +109,7 @@
 
             <div id="servicesMenu" class="overflow-hidden transition-all duration-300 max-h-0 opacity-0">
                 <div class="ml-8 mt-2 space-y-1 py-2">
-                    <a href="services.jsp" class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
+                    <a href="servicesList.jsp" class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                         <span class="font-medium w-5 text-center">V</span>
                         <span class="ml-3">View Services</span>
                     </a>
