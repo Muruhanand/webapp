@@ -1,6 +1,5 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ page import="java.sql.*" %>
-<%@ page import="jadca1.User" %>
 <!DOCTYPE html>
 <html>
 <head>
@@ -49,52 +48,83 @@ try {
             // Debug print
             System.out.println("Retrieved user data - Name: " + firstName + " " + lastName);
 
-            User userobj = new User(firstName, lastName, email, phoneNum, address);
-            session.setAttribute("user", userobj);
-            
-            // Debug print
-            System.out.println("User object stored in session");
-            
-            response.sendRedirect("userprofile.jsp");
-        } else {
-            // Debug print
-            System.out.println("No user found for customer_id: " + customerId);
-            %>
-            <div>
-                <h3>Debug Information:</h3>
-                <p>No user found in database.</p>
-                <p>Customer ID: <%= customerId %></p>
-                <p>Email: <%= userEmail %></p>
-                
-                <h4>Session Attributes:</h4>
-                <%
-                java.util.Enumeration<String> attributeNames = session.getAttributeNames();
-                while(attributeNames.hasMoreElements()) {
-                    String name = attributeNames.nextElement();
-                    out.println(name + ": " + session.getAttribute(name) + "<br>");
-                }
-                %>
-                
-                <p><a href="login.jsp">Return to Login</a></p>
-            </div>
-            <%
-        }
-    }
-} catch (Exception e) {
-    System.err.println("Error: " + e);
-    e.printStackTrace();
-    %>
-    <div>
-        <h3>Error Details:</h3>
-        <p>Error Message: <%= e.getMessage() %></p>
-        <p><a href="login.jsp">Return to Login</a></p>
-    </div>
-    <%
-} finally {
-    if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-    if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-    if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
-}
 %>
+            <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                    <a class="nav-link active" id="service-details-tab" data-toggle="tab" href="#service-details" role="tab" aria-controls="service-details" aria-selected="true">Service Details</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" id="booking-history-tab" data-toggle="tab" href="#booking-history" role="tab" aria-controls="booking-history" aria-selected="false">Booking History</a>
+                </li>
+            </ul>
+            <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="service-details" role="tabpanel" aria-labelledby="service-details-tab">
+                    <form action="updateService.jsp" method="post" class="mt-3">
+                        <div class="form-group">
+                            <label for="firstName">First Name:</label>
+                            <input type="text" class="form-control" id="first_name" name="first_name" value="<%= firstName %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName">Last Name:</label>
+                            <input type="text" class="form-control" id="last_name" name="last_name" value="<%= lastName %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="email">Email:</label>
+                            <input type="email" class="form-control" id="email" name="email" value="<%= email %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="phoneNum">Phone Number:</label>
+                            <input type="text" class="form-control" id="phone_number" name="phone_number" value="<%= phoneNum %>">
+                        </div>
+                        <div class="form-group">
+                            <label for="address">Address:</label>
+                            <input type="text" class="form-control" id="address" name="address" value="<%= address %>">
+                        </div>
+                        <button type="submit" class="btn btn-primary">Update Service</button>
+                    </form>
+                </div>
+                <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
+                    <h3 class="mt-3">Booking History</h3>
+<%
+    // Query to get booking information
+    String sqlBookings = "SELECT s.service_id, s.service_name, b.booking_date, b.status FROM bookings b JOIN service s ON b.service_id = s.service_id WHERE b.customer_id = ?";
+    pstmtBookings = conn.prepareStatement(sqlBookings);
+    pstmtBookings.setString(1, userid);
+    rsBookings = pstmtBookings.executeQuery();
+%>
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>Service Name</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Review</th>
+        </tr>
+    </thead>
+    <tbody>
+<%
+    while (rsBookings.next()) {
+    	int serviceid = rsBookings.getInt("service_id");
+        String serviceName = rsBookings.getString("service_name");
+        String bookingDate = rsBookings.getString("booking_date");
+        String status = rsBookings.getString("status");
+%>
+        <tr>
+            <td><%= serviceName %></td>
+            <td><%= bookingDate %></td>
+            <td><%= status %></td>
+            <td>
+                <a href="feedback.jsp?serviceId=<%= serviceid %>&serviceName=<%= serviceName %>" class="btn btn-primary">Review</a>
+            </td>
+        </tr>
+<%
+    }
+%>
+    </tbody>
+</table>
+                </div>
+            </div>
+<%
+
 </body>
 </html>

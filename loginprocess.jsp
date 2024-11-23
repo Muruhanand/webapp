@@ -47,7 +47,6 @@
         pstmt.setString(1, email);  // Set the email parameter for the query
 
         rs = pstmt.executeQuery();
-        System.out.println("");
         if (rs.next()) {
             String storedHashedPassword = rs.getString("password");
             String customerid = rs.getString("customer_id");

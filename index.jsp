@@ -9,11 +9,13 @@
 <link rel="stylesheet" href="css/styles.css">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
-<link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link
+	href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap"
+	rel="stylesheet">
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
-	  <% 
+	<% 
         String userId = (String) session.getAttribute("userid");
 		System.out.println("User ID: "+userId);
     %>
@@ -44,8 +46,7 @@
 					cleaning services while ensuring the well-being of our clients and
 					the environment. We believe that a clean space fosters
 					productivity, relaxation, and peace of mind, which is why we strive
-					to exceed expectations in every job we undertake.
-				</p>
+					to exceed expectations in every job we undertake.</p>
 			</div>
 
 			<div class="about-values">
@@ -58,15 +59,14 @@
 						<th>Customer Satisfaction:</th>
 					</tr>
 					<tr>
-						<td>We use the best products and
-						equipment to ensure a spotless finish.</td>
-						<td>We are transparent and honest
-						in every interaction, providing services you can trust.</td>
-						<td>We prioritize the use
-						of environmentally-friendly products that are safe for your
-						family, pets, and the planet.</td>
-						<td>Your happiness is
-						our top priority, and we guarantee you'll love the results.</td>
+						<td>We use the best products and equipment to ensure a
+							spotless finish.</td>
+						<td>We are transparent and honest in every interaction,
+							providing services you can trust.</td>
+						<td>We prioritize the use of environmentally-friendly
+							products that are safe for your family, pets, and the planet.</td>
+						<td>Your happiness is our top priority, and we guarantee
+							you'll love the results.</td>
 					</tr>
 				</table>
 			</div>
@@ -81,8 +81,8 @@
 			</div>
 
 			<div class="about-cta">
-				<p>If you have ever used our services, write in now if you wish 
-				to convey any feedback for our staff or services. Contact us now!</p>
+				<p>If you have ever used our services, write in now if you wish
+					to convey any feedback for our staff or services. Contact us now!</p>
 				<a href="feedback.jsp" class="cta-button">Get in Touch</a>
 			</div>
 		</div>

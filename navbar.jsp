@@ -5,7 +5,8 @@
 <head>
 <meta charset="UTF-8">
 <title>Navbar</title>
-<link href="${pageContext.request.contextPath}/css/navbar.css" rel="stylesheet" />
+<link href="${pageContext.request.contextPath}/css/navbar.css"
+	rel="stylesheet" />
 </head>
 <body>
 	<nav>
@@ -18,14 +19,14 @@
 				String userid = (String) session.getAttribute("userid");
 				if (userid != null) {
 			%>
-				<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
-				<li><a href="cart.jsp">Cart</a></li>
-				<li><a href="customerProfile.jsp">Profile</a></li>
-				<li><a href="logout.jsp">Logout</a></li>
+			<li><a href="bookAppointment.jsp">Book an Appointment</a></li>
+			<li><a href="cart.jsp">Cart</a></li>
+			<li><a href="customerProfile.jsp">Profile</a></li>
+			<li><a href="logout.jsp">Logout</a></li>
 			<%
 				} else {
 			%>
-				<li><a href="login.jsp">Login</a></li>
+			<li><a href="newlogin.jsp">Login</a></li>
 			<%
 			}
 			%>
