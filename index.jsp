@@ -22,7 +22,7 @@
 		<div class="hero-content">
 			<h1>Welcome to Our Business</h1>
 			<p>Providing the best services for your needs.</p>
-			<a href="#services" class="cta-button">Learn More</a>
+			<a href="serviceCategory.jsp" class="cta-button">Learn More</a>
 		</div>
 	</section>
 
