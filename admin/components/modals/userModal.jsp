@@ -50,6 +50,7 @@
 							%>
 
 							<div class="space-y-4">
+								<input class="hidden" name="userId" id="userId" />
 								<!-- Name Fields -->
 								<div class="grid grid-cols-2 gap-4">
 									<div>
@@ -178,6 +179,7 @@
 			modalTitle.textContent = 'Edit User';
 			submitButton.textContent = 'Save Changes';
 			userForm.action = 'api/user/editUser.jsp';
+			console.log(userData);
         	
 			document.getElementById('userId').value = userData.id;
         	document.getElementById('first_name').value = userData.firstName;
