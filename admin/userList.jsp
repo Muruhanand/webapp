@@ -141,9 +141,10 @@
 										totalPages = (int) Math.ceil((double) totalRecords / pageSize);
 
 										// Get paginated data
-										String sqlStr = "SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user LIMIT ?";
+										String sqlStr = "SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user LIMIT ? OFFSET ?";
 										pstmt = conn.prepareStatement(sqlStr);
 										pstmt.setInt(1, pageSize);
+										pstmt.setInt(2, offset);
 										rs = pstmt.executeQuery();
 
 										while (rs.next()) {
@@ -190,7 +191,8 @@
 												</button>
 												<button class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
 													onclick="openDeactivationModal(<%=userId%>, <%=userStatus%>)">
-													<i class="fas <%=userStatus ? "fa-user-slash" : "fa-user-check"%>"></i>
+													<i
+														class="fas <%=userStatus ? "fa-user-slash" : "fa-user-check"%>"></i>
 												</button>
 											</div>
 										</td>
@@ -220,8 +222,14 @@
 										<td colspan="5" class="pt-4">
 											<div class="flex justify-between items-center">
 												<div class="text-sm text-gray-500">
-													Showing 1 to
-													<%=Math.min(pageSize, totalRecords)%>
+													<%
+													int startRecord = offset + 1;
+													int endRecord = Math.min(offset + pageSize, totalRecords);
+													%>
+													Showing
+													<%=startRecord%>
+													to
+													<%=endRecord%>
 													of
 													<%=totalRecords%>
 													entries
