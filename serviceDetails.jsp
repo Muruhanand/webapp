@@ -49,6 +49,8 @@
 			// Database connection
 			Class.forName("com.mysql.cj.jdbc.Driver");
 			String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+
+			// Step 3: Establish connection to URL
 			conn = DriverManager.getConnection(connURL);
 
 			// Get total record count
