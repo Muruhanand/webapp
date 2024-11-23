@@ -27,6 +27,13 @@
     boolean isValid = true;
     StringBuilder errorMessage = new StringBuilder();
 
+    // Print the values being submitted
+    System.out.println("Selected Date: " + selectedDate);
+    System.out.println("Selected Time Start: " + selectedTimeStart);
+    System.out.println("Selected Time End: " + selectedTimeEnd);
+    System.out.println("Category Option: " + categoryOption);
+    System.out.println("Service Option: " + serviceOption);
+
     // Validate selectedDate
     if (selectedDate == null || selectedDate.trim().isEmpty()) {
         isValid = false;
@@ -98,7 +105,7 @@
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         String sqlStr = "SELECT * FROM service WHERE service_id = ?";

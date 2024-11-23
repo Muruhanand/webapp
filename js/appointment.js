@@ -8,11 +8,15 @@ function populateServices() {
 
     // Populate new options
     if (servicesByCategory[selectedCategory]) {
+        var uniqueServices = new Set();
         servicesByCategory[selectedCategory].forEach(function(service) {
-            var option = document.createElement("option");
-            option.value = service[0];
-            option.text = service[1];
-            serviceSelect.appendChild(option);
+            if (!uniqueServices.has(service[1])) {
+                uniqueServices.add(service[1]);
+                var option = document.createElement("option");
+                option.value = service[0];
+                option.text = service[1];
+                serviceSelect.appendChild(option);
+            }
         });
     }
 }
@@ -32,9 +36,7 @@ window.addEventListener("DOMContentLoaded", function() {
         dateSelector.setAttribute('min', minDateStr);
         dateSelector.setAttribute('max', maxDateStr);
     }
-
 });
-
 
 function checkOut() {
     var checkboxes = document.querySelectorAll('input[name="selectedItems"]');
