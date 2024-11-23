@@ -99,37 +99,42 @@ try {
                 <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
                     <h3 class="mt-3">Booking History</h3>
 <%
-            // Query to get booking information
-            String sqlBookings = "SELECT  s.service_name, b.booking_date, b.status FROM bookings b JOIN service s ON b.service_id = s.service_id WHERE b.customer_id =?";
-            pstmtBookings = conn.prepareStatement(sqlBookings);
-            pstmtBookings.setInt(1, userid1);
-            rsBookings = pstmtBookings.executeQuery();
+    // Query to get booking information
+    String sqlBookings = "SELECT s.service_id, s.service_name, b.booking_date, b.status FROM bookings b JOIN service s ON b.service_id = s.service_id WHERE b.customer_id = ?";
+    pstmtBookings = conn.prepareStatement(sqlBookings);
+    pstmtBookings.setString(1, userid);
+    rsBookings = pstmtBookings.executeQuery();
 %>
-                    <table class="table table-borderless">
-                        <thead>
-                            <tr>
-                                <th>Service Name</th>
-                                <th>Booking Date</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-                        <tbody>
+<table class="table table-borderless">
+    <thead>
+        <tr>
+            <th>Service Name</th>
+            <th>Booking Date</th>
+            <th>Status</th>
+            <th>Review</th>
+        </tr>
+    </thead>
+    <tbody>
 <%
-            while (rsBookings.next()) {
-                String serviceName = rsBookings.getString("service_name");
-                String bookingDate = rsBookings.getString("booking_date");
-                String status = rsBookings.getString("status");
+    while (rsBookings.next()) {
+    	int serviceid = rsBookings.getInt("service_id");
+        String serviceName = rsBookings.getString("service_name");
+        String bookingDate = rsBookings.getString("booking_date");
+        String status = rsBookings.getString("status");
 %>
-                            <tr>
-                                <td><%= serviceName %></td>
-                                <td><%= bookingDate %></td>
-                                <td><%= status %></td>
-                            </tr>
+        <tr>
+            <td><%= serviceName %></td>
+            <td><%= bookingDate %></td>
+            <td><%= status %></td>
+            <td>
+                <a href="feedback.jsp?serviceId=<%= serviceid %>&serviceName=<%= serviceName %>" class="btn btn-primary">Review</a>
+            </td>
+        </tr>
 <%
-            }
+    }
 %>
-                        </tbody>
-                    </table>
+    </tbody>
+</table>
                 </div>
             </div>
 <%
