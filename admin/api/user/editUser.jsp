@@ -51,14 +51,12 @@
 		conn = DriverManager.getConnection(connURL);
 
 		// just checks if password is left blank or nah
-		// Correct SQL
 		String sql = password.equals("")
 			? "UPDATE user SET admin=?, first_name=?, last_name=?, email=?, phone_number=?, address=? WHERE customer_id=?"
 			: "UPDATE user SET admin=?, first_name=?, last_name=?, email=?, phone_number=?, address=?, password=? WHERE customer_id=?";
 		
 		pstmt = conn.prepareStatement(sql);
 
-		// Correct parameter binding
 		pstmt.setBoolean(1, checkAdmin);
 		pstmt.setString(2, firstName);
 		pstmt.setString(3, lastName);
@@ -72,8 +70,6 @@
 			pstmt.setInt(7, customerId);
 		}
 
-
-		// Execute the insert operation
 		int rows = pstmt.executeUpdate();
 
 		if (rows > 0) {

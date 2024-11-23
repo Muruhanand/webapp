@@ -167,26 +167,16 @@
             </a>
         </div>
     </nav>
-
-    <!-- <script>
-        function toggleDropdown(menuId) {
-            const menu = document.getElementById(menuId);
-            const icon = document.getElementById(menuId.replace('Menu', 'Icon'));
-            menu.classList.toggle('dropdown-active');
-            icon.style.transform = icon.style.transform === 'rotate(180deg)' ? 'rotate(0deg)' : 'rotate(180deg)';
-        }
-    </script> -->
+    
     <script>
 		function toggleDropdown(clickedMenuId) {
-    		// Get all dropdown menus
     		const allMenus = ['profileMenu', 'usersMenu', 'servicesMenu', 'bookingsMenu'];
     		const allIcons = ['profileIcon', 'usersIcon', 'servicesIcon', 'bookingsIcon'];
     
-    		// Get the clicked menu and its icon
     		const clickedMenu = document.getElementById(clickedMenuId);
     		const clickedIcon = document.getElementById(clickedMenuId.replace('Menu', 'Icon'));
     
-    		// Close all other menus and reset their icons
+    		// Close all menus except this one basically only open this one and reset icons
     		allMenus.forEach((menuId, index) => {
         		if (menuId !== clickedMenuId) {
             		const menu = document.getElementById(menuId);
@@ -200,10 +190,8 @@
         		}
     		});
     
-    		// Toggle the clicked menu
     		clickedMenu.classList.toggle('dropdown-active');
     
-    		// Toggle the clicked icon rotation
     		clickedIcon.style.transform = clickedMenu.classList.contains('dropdown-active') 
         		? 'rotate(180deg)' 
         		: 'rotate(0deg)';

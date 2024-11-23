@@ -1,8 +1,8 @@
 <%@ page import="java.sql.*"%>
 <%@ page import="java.security.MessageDigest"%>
 <%@ page import="java.security.NoSuchAlgorithmException"%>
-<%@ include file="components/modals/userModal.jsp"%>
-<%@ include file="components/modals/confirmationModal.jsp"%>
+<%@ include file="components/modals/user/userModal.jsp"%>
+<%@ include file="components/modals/user/confirmationModal.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -50,11 +50,11 @@
             %>
             <div class="font-bold text-3xl py-2">Users List</div>
 
-            <!-- User List Content -->
+            <!-- content -->
             <div class="p-6">
                 <div class="bg-white rounded-lg shadow-sm">
                     <div class="p-6">
-                        <!-- Header Section -->
+                        <!-- header-->
                         <div class="flex justify-between items-center mb-6">
                             <h2 class="text-xl font-bold">All users</h2>
                             <div class="flex gap-2">
@@ -69,7 +69,7 @@
                             </div>
                         </div>
 
-                        <!-- Search and Page Size Section -->
+                        <!-- search bar & pagination -->
                         <div class="flex justify-between items-center mb-6">
                             <div class="relative flex-1 max-w-md">
                                 <input type="text" 
@@ -94,7 +94,7 @@
                             </div>
                         </div>
 
-                        <!-- Table -->
+                        <!-- table -->
                         <div class="overflow-x-auto">
                             <table class="w-full">
                                 <thead>
@@ -144,25 +144,24 @@
                                         String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
                                         conn = DriverManager.getConnection(connURL);
 
-                                        // Get search parameter
                                         String searchQuery = request.getParameter("search");
                                         
-                                        // Base SQL for counting
+                                        // total count of users
                                         StringBuilder countSql = new StringBuilder("SELECT COUNT(*) as total FROM user");
-                                        // Base SQL for data
+                                        // every user in db
                                         StringBuilder dataSql = new StringBuilder("SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user");
                                         
-                                     	// Add search condition if search parameter exists
+                                     	// if smt is in search add this part to filter out basically
                                         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                                             String whereClause = " WHERE first_name LIKE ? OR last_name LIKE ? OR CONCAT(first_name, ' ', last_name) LIKE ?";
                                             countSql.append(whereClause);
                                             dataSql.append(whereClause);
                                         }
                                         
-                                        // Add pagination to data SQL
+                                        // add pagination
                                         dataSql.append(" LIMIT ? OFFSET ?");
                                         
-                                        // Get total count
+                                        // total count (how this works err a bit long to explain basically run for loop to fill in param entered earlier)
                                         PreparedStatement countStmt = conn.prepareStatement(countSql.toString());
                                         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
                                             String searchPattern = "%" + searchQuery + "%";
@@ -174,13 +173,13 @@
                                         countRs = countStmt.executeQuery();
                                         totalRecords = countRs.next() ? countRs.getInt("total") : 0;
                                         
-                                        // Validate and set pagination params
+                                        // all user data (how this works err a bit long to explain basically run for loop to fill in param entered earlier)
                                         pageSize = getPageSize(request.getParameter("pageSize"), totalRecords);
                                         currentPage = getPageNumber(request.getParameter("page"), totalRecords, pageSize);
                                         totalPages = (int) Math.ceil((double) totalRecords / pageSize);
                                         offset = (currentPage - 1) * pageSize;
                                         
-                                        // Get paginated data
+                                        // paginated data
                                         pstmt = conn.prepareStatement(dataSql.toString());
                                         int paramIndex = 1;
                                         if (searchQuery != null && !searchQuery.trim().isEmpty()) {
@@ -326,11 +325,11 @@
             const validSize = !isNaN(size) && size > 0 && size <= 100 ? size : 10;
             const url = new URL(window.location.href);
             url.searchParams.set('pageSize', validSize);
-            url.searchParams.set('page', '1'); // Reset to first page
+            url.searchParams.set('page', '1'); // reset to first page
             window.location.href = url.toString();
         }
 
-        // Set selected page size in dropdown
+        // set page number in dropdown
         document.addEventListener('DOMContentLoaded', function() {
             const urlParams = new URLSearchParams(window.location.search);
             const pageSize = urlParams.get('pageSize') || '10';
@@ -338,14 +337,14 @@
             document.getElementById('pageSize').value = validPageSize;
         });
         
-        // Status alert auto-hide
+        // close alert after update or create
         document.addEventListener('DOMContentLoaded', function() {
             const statusAlert = document.getElementById('statusAlert');
             if (statusAlert) {
                 setTimeout(() => {
                     statusAlert.remove();
                     
-                    // Remove status parameters from URL
+                    // remove url param for page size and number
                     const url = new URL(window.location.href);
                     url.searchParams.delete('status');
                     url.searchParams.delete('message');
@@ -354,27 +353,27 @@
             }
         });
 
-     // Search functionality
+     // search functionality
         document.addEventListener('DOMContentLoaded', function() {
             const searchInput = document.getElementById('searchInput');
             
             searchInput.addEventListener('keyup', function(event) {
-                // Check if Enter key is pressed
+                // check for enter key input
                 if (event.key === 'Enter') {
                     const searchValue = this.value.trim();
                     const url = new URL(window.location.href);
                     
-                    // If search is blank, remove search parameter
+                    // if empty show all results
                     if (!searchValue) {
                         url.searchParams.delete('search');
                     } else {
                         url.searchParams.set('search', searchValue);
                     }
                     
-                    // Reset to first page when searching
+                    // reset page when search 
                     url.searchParams.set('page', '1');
                     
-                    // Keep the current page size
+                    // keep page size
                     const currentPageSize = url.searchParams.get('pageSize');
                     if (currentPageSize) {
                         url.searchParams.set('pageSize', currentPageSize);

@@ -11,13 +11,9 @@
 </head>
 <body>
 	<%
-	System.out.println(request.getParameter("status"));
 	boolean status = Boolean.valueOf(request.getParameter("status"));
 	String userId = request.getParameter("customerId");
 	
-	System.out.println(status);
-	System.out.println(userId);
-
 	Connection conn = null;
 	PreparedStatement pstmt = null;
 
@@ -29,7 +25,6 @@
 		String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
 		conn = DriverManager.getConnection(connURL);
 
-		// SQL statement for inserting customer data with NOW() for created_at
 		String sql = "UPDATE user SET status = ? WHERE customer_id = ?;";
 
 		pstmt = conn.prepareStatement(sql);
@@ -38,7 +33,7 @@
 		pstmt.setBoolean(1, !status);
 		pstmt.setString(2, userId);
 				
-		// Execute the insert operation
+		
 		int rows = pstmt.executeUpdate();
 
 		String operation = status ? "deactivated" : "activated";
