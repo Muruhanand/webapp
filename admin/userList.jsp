@@ -288,8 +288,9 @@
 
 	<script>
 		function changePageSize(size) {
+			const validSize = !isNaN(size) && size > 0 && size <= 100 ? size : 10;
 			const url = new URL(window.location.href);
-			url.searchParams.set('pageSize', size);
+			url.searchParams.set('pageSize', validSize);
 			url.searchParams.set('page', '1'); // Reset to first page
 			window.location.href = url.toString();
 		}
@@ -298,7 +299,8 @@
 		document.addEventListener('DOMContentLoaded', function() {
 			const urlParams = new URLSearchParams(window.location.search);
 			const pageSize = urlParams.get('pageSize') || '10';
-			document.getElementById('pageSize').value = pageSize;
+			const validPageSize = !isNaN(pageSize) && pageSize > 0 && pageSize <= 100 ? pageSize : '10';
+			document.getElementById('pageSize').value = validPageSize;
 		});
 		
 		document.addEventListener('DOMContentLoaded', function() {
