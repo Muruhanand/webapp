@@ -30,7 +30,7 @@
             user.setAddress(address);
 
             // Database URL and connection setup
-            String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
             try {
                 // Register JDBC driver (optional depending on your setup)
                 Class.forName("com.mysql.cj.jdbc.Driver");
