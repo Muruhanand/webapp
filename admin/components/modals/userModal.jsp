@@ -7,11 +7,10 @@
 <title>User Management Modal</title>
 </head>
 <body>
-	<!-- Create a new file: components/modals/userModal.jsp -->
 	<%
 	String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "create";
 	boolean isEdit = mode.equals("edit");
-	String modalTitle = isEdit ? "Edit User" : "Add New User";
+	String editModalTitle = isEdit ? "Edit User" : "Add New User";
 	String modalId = "userModal";
 	String formAction = isEdit ? "api/user/editUser.jsp" : "api/user/createUser.jsp";
 	String submitButtonText = isEdit ? "Save Changes" : "Add User";
@@ -32,7 +31,7 @@
 					class="modal-content w-full max-w-md transform transition-all duration-300 ease-in-out scale-95 opacity-0">
 					<div class="relative bg-white rounded-lg shadow-xl p-6">
 						<div class="flex items-center justify-between mb-4">
-							<h3 id="modal-title" class="text-xl font-semibold text-gray-900"><%=modalTitle%></h3>
+							<h3 id="modal-title" class="text-xl font-semibold text-gray-900"><%=editModalTitle%></h3>
 							<button onclick="closeModal('<%=modalId%>')"
 								class="text-gray-400 hover:text-gray-500 transition-colors duration-200">
 								<i class="fas fa-times"></i>
@@ -148,7 +147,7 @@
     	const modal = document.getElementById(modalId);
     	const backdrop = modal.querySelector('.modal-backdrop');
     	const content = modal.querySelector('.modal-content');
-    	const modalTitle = modal.querySelector('#modal-title');
+    	const editModalTitle = modal.querySelector('#modal-title');
     	const submitButton = modal.querySelector('#submitButton');
 		const userForm = document.getElementById('userForm');
     
@@ -176,7 +175,7 @@
     
     	if (userData && userData.mode === 'edit') {
         	// Edit mode - populate form
-			modalTitle.textContent = 'Edit User';
+			editModalTitle.textContent = 'Edit User';
 			submitButton.textContent = 'Save Changes';
 			userForm.action = 'api/user/editUser.jsp';
 			console.log(userData);
@@ -194,7 +193,7 @@
         	document.getElementById('confirmPassword').removeAttribute('required');
     	} else {
         	// Change text
-			modalTitle.textContent = 'Add New User';
+			editModalTitle.textContent = 'Add New User';
 			submitButton.textContent = 'Add User';
 			userForm.action = 'api/user/createUser.jsp';
 
