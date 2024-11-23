@@ -101,6 +101,26 @@
 									</tr>
 								</thead>
 								<tbody>
+									<%!
+									int getPageSize(String size, int total) {
+									    try {
+									        int val = Integer.parseInt(size);
+									        return (val > 0 && val <= 100) ? val : 10;  // Max 100, default 10
+									    } catch (Exception e) {
+									        return 10;
+									    }
+									}
+
+									int getPageNumber(String page, int total, int size) {
+									    try {
+									        int val = Integer.parseInt(page);
+									        int maxPages = Math.max(1, (int) Math.ceil((double) total / size));
+									        return Math.min(Math.max(1, val), maxPages);
+									    } catch (Exception e) {
+									        return 1;
+									    }
+									}
+									%>
 									<%
 									Connection conn = null;
 									PreparedStatement pstmt = null;
@@ -113,19 +133,6 @@
 									int offset = 0;
 
 									try {
-										// Get pagination parameters
-										String pageSizeParam = request.getParameter("pageSize");
-										if (pageSizeParam != null && !pageSizeParam.isEmpty()) {
-											pageSize = Integer.parseInt(pageSizeParam);
-										}
-
-										String pageParam = request.getParameter("page");
-										if (pageParam != null && !pageParam.isEmpty()) {
-											currentPage = Integer.parseInt(pageParam);
-										}
-
-										offset = (currentPage - 1) * pageSize;
-
 										// Database connection
 										Class.forName("com.mysql.cj.jdbc.Driver");
 										String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
@@ -134,12 +141,15 @@
 										// Get total count
 										String countSql = "SELECT COUNT(*) as total FROM user";
 										PreparedStatement countStmt = conn.prepareStatement(countSql);
-										countRs = countStmt.executeQuery();
-										if (countRs.next()) {
-											totalRecords = countRs.getInt("total");
-										}
-										totalPages = (int) Math.ceil((double) totalRecords / pageSize);
-
+									    countRs = countStmt.executeQuery();
+									    totalRecords = countRs.next() ? countRs.getInt("total") : 0;
+									    
+									    // Validate and set pagination params
+									    pageSize = getPageSize(request.getParameter("pageSize"), totalRecords);
+								        currentPage = getPageNumber(request.getParameter("page"), totalRecords, pageSize);
+								        totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+								        offset = (currentPage - 1) * pageSize;
+									    
 										// Get paginated data
 										String sqlStr = "SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user LIMIT ? OFFSET ?";
 										pstmt = conn.prepareStatement(sqlStr);
