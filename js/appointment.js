@@ -34,3 +34,14 @@ window.addEventListener("DOMContentLoaded", function() {
     }
 
 });
+
+
+function checkOut() {
+    var checkboxes = document.querySelectorAll('input[name="selectedItems"]');
+    var anyChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
+    if (!anyChecked) {
+        checkboxes.forEach(checkbox => checkbox.checked = true);
+    }
+    document.getElementById('checkoutForm').action = 'processCheckout.jsp';
+    document.getElementById('checkoutForm').submit();
+}
