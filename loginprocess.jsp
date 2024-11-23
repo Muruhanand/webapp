@@ -37,7 +37,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Connect to the database
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         // SQL query to fetch the stored hashed password by email
@@ -47,7 +47,6 @@
         pstmt.setString(1, email);  // Set the email parameter for the query
 
         rs = pstmt.executeQuery();
-        System.out.println("");
         if (rs.next()) {
             String storedHashedPassword = rs.getString("password");
             String customerid = rs.getString("customer_id");

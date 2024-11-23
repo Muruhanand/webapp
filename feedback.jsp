@@ -3,11 +3,12 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Feedback Form</title>
+<title>Feedback</title>
+<link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
 </head>
 <body>
-
+	<%@ include file="navbar.jsp"%>
 <%
 String userId = (String) session.getAttribute("userid");
 if (userId == null) {
@@ -43,7 +44,7 @@ if (userId == null) {
         </div>
         <button type="submit" class="btn btn-primary">Submit Feedback</button>
     </form>
-</div>
-
+	</div>
+	<%@ include file="footer.jsp"%>
 </body>
 </html>

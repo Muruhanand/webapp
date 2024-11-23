@@ -3,18 +3,20 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>Insert title here</title>
+    <meta charset="UTF-8">
+    <title>Book Appointment</title>
 </head>
 <body>
-    <%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal, java.lang.StringBuilder"%>
+<%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal, java.lang.StringBuilder"%>
 <%
     String customer_id = "";
     if(session.getAttribute("userid") != null) {
-		customer_id = (String) session.getAttribute("userid");
-	}else{
-		out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
-	}
+        customer_id = (String) session.getAttribute("userid");
+    } else {
+        out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
+        return;
+    }
+
     String selectedDate = request.getParameter("selectedDate");
     String selectedTimeStart = request.getParameter("selectedTimeStart");
     String selectedTimeEnd = request.getParameter("selectedTimeEnd");
@@ -24,6 +26,13 @@
 
     boolean isValid = true;
     StringBuilder errorMessage = new StringBuilder();
+
+    // Print the values being submitted
+    System.out.println("Selected Date: " + selectedDate);
+    System.out.println("Selected Time Start: " + selectedTimeStart);
+    System.out.println("Selected Time End: " + selectedTimeEnd);
+    System.out.println("Category Option: " + categoryOption);
+    System.out.println("Service Option: " + serviceOption);
 
     // Validate selectedDate
     if (selectedDate == null || selectedDate.trim().isEmpty()) {
@@ -41,12 +50,9 @@
     }
 
     // Validate selectedTimeStart and selectedTimeEnd
-    if (selectedTimeStart == null || selectedTimeStart.trim().isEmpty()) {
+    if (selectedTimeStart == null || !selectedTimeStart.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
         isValid = false;
-        errorMessage.append("Starting time is required. ");
-    } else if (!selectedTimeStart.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
-        isValid = false;
-        errorMessage.append("Invalid start time format (expected HH:mm). ");
+        errorMessage.append("Invalid or missing start time (expected HH:mm). ");
     }
 
     if (selectedTimeEnd == null || selectedTimeEnd.trim().isEmpty()) {
@@ -60,10 +66,8 @@
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             Date startTime = sdf.parse(selectedTimeStart);
             Date endTime = sdf.parse(selectedTimeEnd);
-
+            
             long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
-
-            // Calculate the number of hours
             long differenceInHours = differenceInMilliSeconds / (60 * 60 * 1000);
 
             // Validate the time difference
@@ -77,17 +81,14 @@
             isValid = false;
             errorMessage.append("Invalid time format. ");
         }
-
     }
 
-    // Validate categoryOption
-    if (categoryOption == null || categoryOption.trim().isEmpty() || !categoryOption.matches("\\d+")) {
+    // Validate categoryOption and serviceOption
+    if (categoryOption == null || !categoryOption.matches("\\d+")) {
         isValid = false;
-        errorMessage.append("Category selection is required and must be numeric. ");
+        errorMessage.append("Invalid or missing category. ");
     }
-
-    // Validate serviceOption
-    if (serviceOption == null || serviceOption.trim().isEmpty() || !serviceOption.matches("\\d+")) {
+    if (serviceOption == null || !serviceOption.matches("\\d+")) {
         isValid = false;
         errorMessage.append("Service selection is required and must be numeric. ");
     }
@@ -104,7 +105,7 @@
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         String sqlStr = "SELECT * FROM service WHERE service_id = ?";
@@ -116,10 +117,10 @@
             String serviceId = rs.getString("service_id");
             String priceStr = rs.getString("price");
             BigDecimal price = new BigDecimal(priceStr);
-
             BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(numOfHours));
 
             String sqlInsert = "INSERT INTO bookings (service_id, customer_id, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
+            pstmt.close(); // Close previous statement
             pstmt = conn.prepareStatement(sqlInsert);
             pstmt.setString(1, serviceId);
             pstmt.setString(2, customer_id);
@@ -136,11 +137,14 @@
     } catch (Exception e) {
         response.sendRedirect("bookAppointment.jsp?error=Error occurred: " + e.getMessage());
     } finally {
-        if (rs != null) try { rs.close(); } catch (SQLException e) { e.printStackTrace(); }
-        if (pstmt != null) try { pstmt.close(); } catch (SQLException e) { e.printStackTrace(); }
-        if (conn != null) try { conn.close(); } catch (SQLException e) { e.printStackTrace(); }
+        try {
+            if (rs != null) rs.close();
+            if (pstmt != null) pstmt.close();
+            if (conn != null) conn.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 %>
-	
 </body>
 </html>
