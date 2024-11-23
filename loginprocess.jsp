@@ -48,6 +48,7 @@
 
         rs = pstmt.executeQuery();
         System.out.println("");
+        System.out.println("");
         if (rs.next()) {
             String storedHashedPassword = rs.getString("password");
             String customerid = rs.getString("customer_id");
@@ -62,6 +63,7 @@
                 response.sendRedirect("login.jsp?errCode=WrongPassword");
             }
         } else {
+            response.sendRedirect("login.jsp?errCode=NoUserFound");
             response.sendRedirect("login.jsp?errCode=NoUserFound");
         }
     } catch (Exception e) {

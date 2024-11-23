@@ -5,40 +5,19 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>Search Page</title>
-<style>
-/* Styling for the search form and pagination */
-.search-form, .pagination {
-	margin-bottom: 1em;
-}
-
-/* Flex container for results */
-.results-container {
-	display: flex;
-	flex-wrap: wrap;
-	gap: 1em;
-}
-
-.result-item {
-	border: 1px solid red;
-	padding: 1em;
-	width: calc(50% - 1em);
-	box-sizing: border-box;
-}
-
-.pagination a, .pagination span {
-	margin-right: 0.5em;
-}
-</style>
+<title>Search Categories</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com">
 <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link
+	href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+	rel="stylesheet">
 <link rel="stylesheet" href="css/styles.css">
 <link rel="stylesheet" href="css/service.css">
 </head>
 <body>
 	<%@ include file="navbar.jsp"%>
-
+	<h2 class="display-3 text-center">Service Categories</h2>
 	<form class="search-form" action="serviceCategory.jsp" method="GET">
 		<input type="text" name="query" placeholder="Search..."
 			value="<%=request.getParameter("query") != null ? request.getParameter("query") : ""%>">
