@@ -295,8 +295,8 @@
 													<i class="fas fa-edit"></i>
 												</button>
 												<button class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-													onclick="openDeleteModal(<%=serviceId%>)">
-													<i class="fas fa-trash"></i>												
+												    onclick="openDeleteModal(<%=serviceId%>)">
+												    <i class="fas fa-trash"></i>
 												</button>
 											</div>
 										</td>
