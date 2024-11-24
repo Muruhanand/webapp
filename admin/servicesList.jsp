@@ -2,8 +2,8 @@
 <%@ page import="java.security.MessageDigest"%>
 <%@ page import="java.security.NoSuchAlgorithmException"%>
 <%@ page import="java.util.ArrayList"%>
-<%@ include file="components/modals/user/userModal.jsp"%>
-<%@ include file="components/modals/user/confirmationModal.jsp"%>
+<%@ include file="components/modals/service/serviceModal.jsp"%>
+<%@ include file="components/modals/service/confirmationModal.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -63,13 +63,43 @@
 									class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
 									<i class="fas fa-plus"></i> Add Service
 								</button>
-								<select id="filterSelect" onchange="applyFilter(this.value)"
+								<select id="categoryFilter" onchange="applyFilter(this.value)"
 									class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 border-none focus:ring-2 focus:ring-blue-500">
-									<option value="">All Users</option>
-									<option value="role:admin">Admins Only</option>
-									<option value="role:user">Regular Users Only</option>
-									<option value="status:active">Active Users</option>
-									<option value="status:inactive">Deactivated Users</option>
+									<option value="">All Categories</option>
+                                    <%
+                                    Connection catConn = null;
+                                    PreparedStatement catStmt = null;
+                                    ResultSet catRs = null;
+                                    
+                                    try {
+                                        Class.forName("com.mysql.cj.jdbc.Driver");
+                                        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
+                                        catConn = DriverManager.getConnection(connURL);
+                                        
+                                        // Fetch all categories
+                                        String catQuery = "SELECT category_id, category_name FROM service_category ORDER BY category_name";
+                                        catStmt = catConn.prepareStatement(catQuery);
+                                        catRs = catStmt.executeQuery();
+                                        
+                                        while(catRs.next()) {
+                                            String categoryId = catRs.getString("category_id");
+                                            String categoryName = catRs.getString("category_name");
+                                    %>
+                                   			 <option value="<%=categoryId%>"><%=categoryName%></option>
+                                    <%
+                                        }
+                                    } catch (Exception e) {
+                                        System.err.println("Error loading categories: " + e.getMessage());
+                                    } finally {
+                                        try {
+                                            if (catRs != null) catRs.close();
+                                            if (catStmt != null) catStmt.close();
+                                            if (catConn != null) catConn.close();
+                                        } catch (SQLException e) {
+                                            System.err.println("Error closing category resources: " + e.getMessage());
+                                        }
+                                    }
+                                    %>
 								</select>
 							</div>
 						</div>
@@ -78,7 +108,7 @@
 						<div class="flex justify-between items-center mb-6">
 							<div class="relative flex-1 max-w-md">
 								<input type="text" id="searchInput"
-									placeholder="Search for users"
+									placeholder="Search for Services"
 									class="w-full pl-10 pr-4 py-2 border rounded-lg focus:outline-none focus:border-blue-500"
 									value="<%=request.getParameter("search") != null ? request.getParameter("search") : ""%>">
 								<i class="fas fa-search absolute left-3 top-3 text-gray-400"></i>
@@ -101,31 +131,32 @@
 								<thead>
 									<tr class="text-left text-gray-500 text-sm border-b">
 										<th class="pb-4 font-medium">NAME</th>
-										<th class="pb-4 font-medium">PHONE NUMBER</th>
-										<th class="pb-4 font-medium">ROLE</th>
-										<th class="pb-4 font-medium">STATUS</th>
+										<th class="pb-4 font-medium">DESCRIPTION</th>
+										<th class="pb-4 font-medium">PRICE</th>
 										<th class="pb-4 font-medium text-right">ACTIONS</th>
 									</tr>
 								</thead>
 								<tbody>
-									<%!int getPageSize(String size, int total) {
-		try {
-			int val = Integer.parseInt(size);
-			return (val > 0 && val <= 100) ? val : 10; // Max 100, default 10
-		} catch (Exception e) {
-			return 10;
-		}
-	}
+									<%!
+									int getPageSize(String size, int total) {
+										try {
+											int val = Integer.parseInt(size);
+											return (val > 0 && val <= 100) ? val : 10; // Max 100, default 10
+										} catch (Exception e) {
+											return 10;
+										}
+									}
 
-	int getPageNumber(String page, int total, int size) {
-		try {
-			int val = Integer.parseInt(page);
-			int maxPages = Math.max(1, (int) Math.ceil((double) total / size));
-			return Math.min(Math.max(1, val), maxPages);
-		} catch (Exception e) {
-			return 1;
-		}
-	}%>
+									int getPageNumber(String page, int total, int size) {
+										try {
+											int val = Integer.parseInt(page);
+											int maxPages = Math.max(1, (int) Math.ceil((double) total / size));
+											return Math.min(Math.max(1, val), maxPages);
+										} catch (Exception e) {
+											return 1;
+										}
+									}
+									%>
 									<%
 									Connection conn = null;
 									PreparedStatement pstmt = null;
@@ -140,79 +171,66 @@
 									try {
 										// Database connection
 										Class.forName("com.mysql.cj.jdbc.Driver");
-										String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
-										conn = DriverManager.getConnection(connURL);
+									    String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
+									    conn = DriverManager.getConnection(connURL);
 
-										// total count of users
-										StringBuilder countSql = new StringBuilder("SELECT COUNT(*) as total FROM user");
-										// every user in db
-										StringBuilder dataSql = new StringBuilder(
-										"SELECT customer_id, first_name, last_name, email, phone_number, address, admin, status FROM user");
+										// total count of services
+										StringBuilder countSql = new StringBuilder("SELECT COUNT(*) as total FROM service s JOIN service_category sc ON s.category_id = sc.category_id");
+										
+										// every service in db
+										StringBuilder dataSql = new StringBuilder("SELECT s.service_id, s.service_name, s.description, s.price, s.category_id, sc.category_name FROM service s JOIN service_category sc ON s.category_id = sc.category_id");
 
 										StringBuilder whereClause = new StringBuilder();
 										ArrayList<Object> params = new ArrayList<>();
 
 										// if smt is in search add this part to filter out basically
 										String searchQuery = request.getParameter("search");
+										String categoryFilter = request.getParameter("categoryFilter");
+										
+										// where conditions
+										ArrayList<String> conditions = new ArrayList<>();
+										
 										if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-											whereClause
-											.append(" WHERE (first_name LIKE ? OR last_name LIKE ? OR CONCAT(first_name, ' ', last_name) LIKE ?)");
-											params.add("%" + searchQuery + "%");
-											params.add("%" + searchQuery + "%");
-											params.add("%" + searchQuery + "%");
+										    conditions.add("(s.service_name LIKE ? OR s.description LIKE ? OR sc.category_name LIKE ?)");
+										    String searchParam = "%" + searchQuery.trim() + "%";
+										    for(int i = 0; i < 3; i++) {
+										        params.add(searchParam);
+										    }
 										}
-
-										// role filter
-										String roleFilter = request.getParameter("roleFilter");
-										if (roleFilter != null && !roleFilter.trim().isEmpty()) {
-											if (whereClause.length() == 0) {
-										whereClause.append(" WHERE");
-											} else {
-										whereClause.append(" AND");
-											}
-											whereClause.append(" admin = ?");
-											params.add(roleFilter.equals("admin"));
+										
+										if (categoryFilter != null && !categoryFilter.trim().isEmpty()) {
+										    conditions.add("s.category_id = ?");
+										    params.add(categoryFilter);
 										}
-
-										// status filter
-										String statusFilter = request.getParameter("statusFilter");
-										if (statusFilter != null && !statusFilter.trim().isEmpty()) {
-											if (whereClause.length() == 0) {
-										whereClause.append(" WHERE");
-											} else {
-										whereClause.append(" AND");
-											}
-											whereClause.append(" status = ?");
-											params.add(statusFilter.equals("active"));
+										
+										if (!conditions.isEmpty()) {
+										    whereClause.append(" WHERE ").append(String.join(" AND ", conditions));
 										}
-
+										
 										// add the where or and
 										countSql.append(whereClause);
 										dataSql.append(whereClause);
+										
+										// alphabetical order
+										dataSql.append(" ORDER BY s.service_name");
 
 										// add pagination
 										dataSql.append(" LIMIT ? OFFSET ?");
 
 										// total count (how this works err a bit long to explain basically run for loop to fill in param entered earlier)
 										PreparedStatement countStmt = conn.prepareStatement(countSql.toString());
-										int paramIndex = 1;
+										int paramCount = 1;
 										if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-											String searchPattern = "%" + searchQuery + "%";
-											for (int i = 1; i <= 3; i++) {
-										countStmt.setString(paramIndex++, searchPattern);
-											}
+										    String searchPattern = "%" + searchQuery + "%";
+										    for(int i = 0; i < 3; i++) {
+										        countStmt.setString(paramCount++, searchPattern);
+										    }
 										}
-
-										// role filter
-										if (roleFilter != null && !roleFilter.trim().isEmpty()) {
-											countStmt.setBoolean(paramIndex++, roleFilter.equals("admin"));
+										
+										if (categoryFilter != null && !categoryFilter.trim().isEmpty()) {
+										    countStmt.setString(paramCount, categoryFilter);
 										}
-
-										// status filter
-										if (statusFilter != null && !statusFilter.trim().isEmpty()) {
-											countStmt.setBoolean(paramIndex++, statusFilter.equals("active"));
-										}
-
+									
 										countRs = countStmt.executeQuery();
 										totalRecords = countRs.next() ? countRs.getInt("total") : 0;
 
@@ -224,72 +242,60 @@
 
 										// paginated data same thing with the searchquery
 										pstmt = conn.prepareStatement(dataSql.toString());
-										paramIndex = 1;
+										int paramIndex = 1;
 										if (searchQuery != null && !searchQuery.trim().isEmpty()) {
-											String searchPattern = "%" + searchQuery + "%";
-											for (int i = 0; i < 3; i++) {
-										pstmt.setString(paramIndex++, searchPattern);
-											}
+										    String searchPattern = "%" + searchQuery + "%";
+										    for (int i = 0; i < 3; i++) {
+										        pstmt.setString(paramIndex++, searchPattern);
+										    }
 										}
-
-										if (roleFilter != null && !roleFilter.trim().isEmpty()) {
-											pstmt.setBoolean(paramIndex++, roleFilter.equals("admin"));
+										
+										if (categoryFilter != null && !categoryFilter.trim().isEmpty()) {
+										    pstmt.setString(paramIndex++, categoryFilter);
 										}
-
-										if (statusFilter != null && !statusFilter.trim().isEmpty()) {
-											pstmt.setBoolean(paramIndex++, statusFilter.equals("active"));
-										}
-
+										
+										// pagination param
 										pstmt.setInt(paramIndex++, pageSize);
 										pstmt.setInt(paramIndex, offset);
+ 									
+ 										rs = pstmt.executeQuery();
 
-										rs = pstmt.executeQuery();
+										while (rs.next()) {											
+											int serviceId = rs.getInt("s.service_id");
+										    String serviceName = rs.getString("s.service_name");
+										    String description = rs.getString("s.description");
+										    double price = rs.getDouble("s.price");
+										    int categoryId = rs.getInt("s.category_id");
+										    String categoryName = rs.getString("sc.category_name");
 
-										while (rs.next()) {
-											int userId = rs.getInt("customer_id");
-											String firstName = rs.getString("first_name");
-											String lastName = rs.getString("last_name");
-											String email = rs.getString("email");
-											String phoneNumber = rs.getString("phone_number");
-											String address = rs.getString("address");
-											boolean isAdmin = rs.getBoolean("admin");
-											boolean userStatus = rs.getBoolean("status");
 									%>
 									<tr class="border-b">
 										<td class="py-4">
 											<div class="flex items-center gap-3">
 												<div>
-													<div class="font-medium"><%=firstName + " " + lastName%></div>
-													<div class="text-sm text-gray-500"><%=email%></div>
+													<div class="font-medium"><%=serviceName%></div>
+													<div class="text-sm text-gray-500"><%=categoryName%></div>
 												</div>
 											</div>
 										</td>
-										<td class="py-4"><%=phoneNumber%></td>
-										<td class="py-4"><%=isAdmin ? "Admin" : "User"%></td>
-										<td class="py-4"><span
-											class="px-2 py-1 <%=userStatus ? "bg-green-100 text-green-800" : "bg-red-100 text-red-800"%> rounded-full text-sm w-32 inline-flex items-center">
-												<i class="fas fa-circle text-xs mr-2"></i> <%=userStatus ? "Enabled" : "Disabled"%>
-										</span></td>
+										<td class="py-4"><%=description%></td>
+										<td class="py-4"><%="$" + price%></td>
 										<td class="py-4">
 											<div class="flex justify-end gap-3">
 												<button
-													onclick="openModal('userModal', {
+													onclick="openModal('serviceModal', {
                                                         mode: 'edit',
-                                                        id: <%=userId%>,
-                                                        firstName: '<%=firstName.replace("'", "\\'")%>',
-                                                        lastName: '<%=lastName.replace("'", "\\'")%>',
-                                                        email: '<%=email.replace("'", "\\'")%>',
-                                                        address: '<%=address.replace("'", "\\'")%>',
-                                                        phoneNumber: '<%=phoneNumber.replace("'", "\\'")%>',
-                                                        role: '<%=isAdmin ? "admin" : "user"%>'
+                                                        id: <%=serviceId%>,                                                  
+                                                        description: '<%=description.replace("'", "\\'")%>',
+                                                        price: '<%= String.valueOf(price).replace("'", "\\'") %>',
+                                                        category_id: '<%=String.valueOf(categoryId).replace("'", "\\'") %>',                                                       
                                                         })"
 													class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
 													<i class="fas fa-edit"></i>
 												</button>
 												<button class="p-2 text-red-600 hover:bg-red-50 rounded-lg"
-													onclick="openDeactivationModal(<%=userId%>, <%=userStatus%>)">
-													<i
-														class="fas <%=userStatus ? "fa-user-slash" : "fa-user-check"%>"></i>
+													onclick="openDeleteModal(<%=serviceId%>)">
+													<i class="fas fa-trash"></i>												
 												</button>
 											</div>
 										</td>
@@ -316,12 +322,16 @@
 								</tbody>
 								<tfoot>
 									<tr>
-										<td colspan="5" class="pt-4">
+										<td colspan="4" class="pt-4">
 											<div class="flex justify-between items-center">
 												<div class="text-sm text-gray-500">
 													<%
 													int startRecord = offset + 1;
 													int endRecord = Math.min(offset + pageSize, totalRecords);
+													if(totalRecords == 0) { 
+												        startRecord = 0;
+												        endRecord = 0;
+												    }
 													%>
 													Showing
 													<%=startRecord%>
@@ -335,19 +345,18 @@
 													<%
 													if (currentPage > 1) {
 													%>
-													<a
-														href="?page=<%=currentPage - 1%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%>"
-														class="px-3 py-1 border rounded hover:bg-gray-50">Previous</a>
+													<a 
+														href="?page=<%=currentPage - 1%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%><%=request.getParameter("categoryFilter") != null ? "&categoryFilter=" + request.getParameter("categoryFilter") : ""%>"
+    													class="px-3 py-1 border rounded hover:bg-gray-50">Previous</a>
 													<%
 													}
 													%>
 													<%
 													for (int i = 1; i <= totalPages; i++) {
 													%>
-													<a
-														href="?page=<%=i%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%>"
-														class="px-3 py-1 border rounded <%=i == currentPage ? "bg-blue-600 text-white" : "hover:bg-gray-50"%>">
-														<%=i%>
+													<a href="?page=<%=i%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%><%=request.getParameter("categoryFilter") != null ? "&categoryFilter=" + request.getParameter("categoryFilter") : ""%>"
+													    class="px-3 py-1 border rounded <%=i == currentPage ? "bg-blue-600 text-white" : "hover:bg-gray-50"%>">
+													    <%=i%>
 													</a>
 													<%
 													}
@@ -356,9 +365,8 @@
 													<%
 													if (currentPage < totalPages) {
 													%>
-													<a
-														href="?page=<%=currentPage + 1%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%>"
-														class="px-3 py-1 border rounded hover:bg-gray-50">Next</a>
+													<a href="?page=<%=currentPage + 1%>&pageSize=<%=pageSize%><%=request.getParameter("search") != null ? "&search=" + request.getParameter("search") : ""%><%=request.getParameter("categoryFilter") != null ? "&categoryFilter=" + request.getParameter("categoryFilter") : ""%>"
+													    class="px-3 py-1 border rounded hover:bg-gray-50">Next</a>
 													<%
 													}
 													%>
@@ -441,28 +449,22 @@
      
         function applyFilter(filterValue) {
             const url = new URL(window.location.href);
+ 
+            if (filterValue) {
+		        url.searchParams.set('categoryFilter', filterValue);
+		    } else {
+		        url.searchParams.delete('categoryFilter');
+		    }
             
-            // Clear existing filter parameters
-            url.searchParams.delete('roleFilter');
-            url.searchParams.delete('statusFilter');
-            
-            // Apply new filter
-            if (filterValue.startsWith('role:')) {
-                url.searchParams.set('roleFilter', filterValue.split(':')[1]);
-            } else if (filterValue.startsWith('status:')) {
-                url.searchParams.set('statusFilter', filterValue.split(':')[1]);
-            }
-            
-            // Reset to first page when filtering
+            // reset to first page
             url.searchParams.set('page', '1');
             
-            // Keep existing page size
+            // keep the page size even after filtering
             const currentPageSize = url.searchParams.get('pageSize');
             if (currentPageSize) {
                 url.searchParams.set('pageSize', currentPageSize);
             }
             
-            // Keep existing search term
             const currentSearch = url.searchParams.get('search');
             if (currentSearch) {
                 url.searchParams.set('search', currentSearch);
@@ -471,25 +473,14 @@
             window.location.href = url.toString();
         }
 
-        // Set selected filter on page load
+        // set filter when page is loading
         document.addEventListener('DOMContentLoaded', function() {
 		    const urlParams = new URLSearchParams(window.location.search);
-		    const roleFilter = urlParams.get('roleFilter');
-		    const statusFilter = urlParams.get('statusFilter');
-		    const filterSelect = document.getElementById('filterSelect');
-		    
-		    if (roleFilter === 'true') {
-		        filterSelect.value = 'role:admin';
-		    } else if (roleFilter === 'false') {
-		        filterSelect.value = 'role:user';
-		    } else if (statusFilter === 'active') {
-		        filterSelect.value = 'status:active';
-		    } else if (statusFilter === 'inactive') {
-		        filterSelect.value = 'status:inactive';
-		    } else {
-		        filterSelect.value = '';
+		    const categoryFilter = urlParams.get('categoryFilter');
+		    if (categoryFilter) {
+		        document.getElementById('categoryFilter').value = categoryFilter;
 		    }
-        });
+		});
     </script>
 </body>
 </html>
