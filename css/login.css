@@ -8,14 +8,6 @@ html, body {
     flex-direction: column;
 }
 
-form {
-    flex: 1; /* Makes the form container grow to fill available space */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin: 0; /* Remove margins to avoid overflow */
-}
-
 .login-form {
     border-radius: 8px;
     background-color: #24304C; 
