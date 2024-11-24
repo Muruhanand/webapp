@@ -54,6 +54,7 @@
             // Compare the hashed password entered by the user with the stored hashed password
             if (hashedPassword.equals(storedHashedPassword)) {
             	session.setAttribute("userid",customerid);
+                session.setAttribute("admin", admin);
             	response.sendRedirect("index.jsp");
             } else {
                 response.sendRedirect("login.jsp?errCode=WrongPassword");
