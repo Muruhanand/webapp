@@ -64,12 +64,12 @@
 									<i class="fas fa-plus"></i> Add user
 								</button>
 								<select id="filterSelect" onchange="applyFilter(this.value)"
-									class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 border-none focus:ring-2 focus:ring-blue-500">
-									<option value="">All Users</option>
-									<option value="role:admin">Admins Only</option>
-									<option value="role:user">Regular Users Only</option>
-									<option value="status:active">Active Users</option>
-									<option value="status:inactive">Deactivated Users</option>
+								    class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 border-none focus:ring-2 focus:ring-blue-500">
+								    <option value="">All Users</option>
+								    <option value="role:admin">Admins Only</option>
+								    <option value="role:user">Regular Users Only</option>
+								    <option value="status:active">Active Users</option>
+								    <option value="status:inactive">Deactivated Users</option>
 								</select>
 							</div>
 						</div>
@@ -324,6 +324,10 @@
 													<%
 													int startRecord = offset + 1;
 													int endRecord = Math.min(offset + pageSize, totalRecords);
+													if(totalRecords == 0) { 
+												        startRecord = 0;
+												        endRecord = 0;
+												    }
 													%>
 													Showing
 													<%=startRecord%>
@@ -480,9 +484,9 @@
 		    const statusFilter = urlParams.get('statusFilter');
 		    const filterSelect = document.getElementById('filterSelect');
 		    
-		    if (roleFilter === 'true') {
+		    if (roleFilter === 'admin') {
 		        filterSelect.value = 'role:admin';
-		    } else if (roleFilter === 'false') {
+		    } else if (roleFilter === 'user') {
 		        filterSelect.value = 'role:user';
 		    } else if (statusFilter === 'active') {
 		        filterSelect.value = 'status:active';
@@ -491,7 +495,7 @@
 		    } else {
 		        filterSelect.value = '';
 		    }
-        });
+		});
     </script>
 </body>
 </html>
