@@ -220,22 +220,123 @@
 
 	// validate form
 	document.getElementById('userForm').addEventListener('submit', function(e) {
-    	const password = document.getElementById('password').value;
-    	const confirmPassword = document.getElementById('confirmPassword').value;
-    
-    	if (password !== confirmPassword) {
-        	e.preventDefault();
-        	alert('Passwords do not match!');
-        	return false;
-    	}
-    
-    	if (password && password.length < 8) {
-        	e.preventDefault();
-        	alert('Password must be at least 8 characters long!');
-        	return false;
-    	}
+		// dont allow form submission
+	    e.preventDefault(); 
+	    
+	    // obtain values and trim whitespace
+	    const firstName = document.getElementById('first_name').value.trim();
+	    const lastName = document.getElementById('last_name').value.trim();
+	    const email = document.getElementById('email').value.trim();
+	    const phoneNumber = document.getElementById('phone_number').value.trim();
+	    const address = document.getElementById('address').value.trim();
+	    const password = document.getElementById('password').value;
+	    const confirmPassword = document.getElementById('confirmPassword').value;
+	    const role = document.getElementById('role').value;
+	    
+	    // first name validation
+	    if (!firstName || !firstName.replace(/\s/g, '').length) {
+	        alert('First name cannot be empty or contain only spaces');
+	        document.getElementById('first_name').focus();
+	        return false;
+	    }
+	    
+	    if (firstName.length < 2) {
+	        alert('First name must be at least 2 characters long');
+	        document.getElementById('first_name').focus();
+	        return false;
+	    }
+	    
+	    // last name validation
+	    if (!lastName || !lastName.replace(/\s/g, '').length) {
+	        alert('Last name cannot be empty or contain only spaces');
+	        document.getElementById('last_name').focus();
+	        return false;
+	    }
+	    
+	    if (lastName.length < 2) {
+	        alert('Last name must be at least 2 characters long');
+	        document.getElementById('last_name').focus();
+	        return false;
+	    }
+	    
+	    // email validation
+	    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+	    if (!email || !emailRegex.test(email)) {
+	        alert('Please enter a valid email address');
+	        document.getElementById('email').focus();
+	        return false;
+	    }
+	    
+	    // phone number validation
+	    const phoneRegex = /^[689]\d{7}$/;
+	    if (!phoneNumber || !phoneRegex.test(phoneNumber)) {
+	        alert('Please enter a valid 8-digit phone number starting with 6, 8, or 9');
+	        document.getElementById('phone_number').focus();
+	        return false;
+	    }
+	    
+	    // address validation
+	    if (!address || !address.replace(/\s/g, '').length) {
+	        alert('Address cannot be empty or contain only spaces');
+	        document.getElementById('address').focus();
+	        return false;
+	    }
+	    
+	    if (address.length < 5) {
+	        alert('Address must be at least 5 characters long');
+	        document.getElementById('address').focus();
+	        return false;
+	    }
+	    
+	    // password validation
+	    const isEdit = document.querySelector('#userForm').action.includes('editUser.jsp');
+	    
+	    if (!isEdit || (isEdit && password.length > 0)) {
+	        if (password !== confirmPassword) {
+	            alert('Passwords do not match!');
+	            return false;
+	        }
+	        
+	        if (password && password.length < 8) {
+	            alert('Password must be at least 8 characters long!');
+	            return false;
+	        }
+	    }
+	    
+	    // submit when pass all checks
+	    this.submit();
 	});
-
+	
+	// no space allowance at start of input field
+	const textInputs = ['first_name', 'last_name', 'address'];
+	textInputs.forEach(inputId => {
+	    document.getElementById(inputId).addEventListener('input', function(e) {
+	        // only allow one consecutive space
+	        if (this.value.startsWith(' ')) {
+	            this.value = this.value.trimStart();
+	        }
+	        
+	        // only letters, spaces and basic punctuation allowed
+	        this.value = this.value.replace(/[^\w\s-']/g, '');
+	    });
+	});
+	
+	// phone number validation on input
+	document.getElementById('phone_number').addEventListener('input', function(e) {
+	    // Remove any non-digit characters
+	    this.value = this.value.replace(/\D/g, '');
+	    
+	    // Limit to 8 digits
+	    if (this.value.length > 8) {
+	        this.value = this.value.slice(0, 8);
+	    }
+	});
+	
+	// email validation on input
+	document.getElementById('email').addEventListener('input', function(e) {
+	    // Remove spaces as they're typed
+	    this.value = this.value.replace(/\s/g, '');
+	});
 </script>
 </body>
 </html>
