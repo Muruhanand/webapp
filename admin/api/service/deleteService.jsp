@@ -8,6 +8,15 @@
 <title>Delete Service</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userId = (String)session.getAttribute("userid");
+	    if (userId == null || !DBFunctions.checkAdminAuth(userId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 <%
 int serviceId = Integer.parseInt(request.getParameter("serviceId"));
 

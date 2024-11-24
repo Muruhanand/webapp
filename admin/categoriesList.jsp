@@ -2,6 +2,7 @@
 <%@ page import="java.security.MessageDigest"%>
 <%@ page import="java.security.NoSuchAlgorithmException"%>
 <%@ page import="java.util.ArrayList"%>
+
 <%@ include file="components/modals/category/categoryModal.jsp"%>
 <%@ include file="components/modals/category/confirmationModal.jsp"%>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
@@ -19,6 +20,15 @@
 	rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+	<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userIdssss = (String)session.getAttribute("userid");
+	    if (userIdssss == null || !DBFunctions.checkAdminAuth(userIdssss)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<div class="flex min-h-screen p-4">
 		<%@ include file="components/adminSideBar/adminSideBar.jsp"%>
 		<div class="flex-1">

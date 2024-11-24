@@ -10,6 +10,15 @@
 <title>Create New User</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userIds = (String)session.getAttribute("userid");
+	    if (userIds == null || !DBFunctions.checkAdminAuth(userIds)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<%
 	// Get parameters from the request
 	String firstName = request.getParameter("first_name");

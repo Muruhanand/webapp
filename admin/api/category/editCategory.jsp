@@ -8,6 +8,15 @@
 <title>Update Existing Category</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userId = (String)session.getAttribute("userid");
+	    if (userId == null || !DBFunctions.checkAdminAuth(userId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 <%
 int categoryId = Integer.parseInt(request.getParameter("category_id"));
 String categoryName = request.getParameter("category_name");

@@ -7,6 +7,15 @@
 <title>Delete Service Confirmation Modal</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String customerId = (String)session.getAttribute("userid");
+	    if (customerId == null || !DBFunctions.checkAdminAuth(customerId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
     <div id="deleteServiceModal" class="hidden fixed inset-0 z-50"
         aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- backdrop -->

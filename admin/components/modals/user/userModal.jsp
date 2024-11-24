@@ -7,6 +7,15 @@
 <title>User Management Modal</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String customerIds = (String)session.getAttribute("userid");
+	    if (customerIds == null || !DBFunctions.checkAdminAuth(customerIds)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<%
 	String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "create";
 	boolean isEdit = mode.equals("edit");

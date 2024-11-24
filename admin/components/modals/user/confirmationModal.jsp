@@ -7,6 +7,15 @@
 <title>Confirmation Modal</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String customersId = (String)session.getAttribute("userid");
+	    if (customersId == null || !DBFunctions.checkAdminAuth(customersId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<%
 	boolean accountStatus = request.getParameter("status") != null
 			? Boolean.parseBoolean(request.getParameter("status"))

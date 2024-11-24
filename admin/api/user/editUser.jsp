@@ -10,6 +10,15 @@
 <title>Update Existing User</title>
 </head>
 <body>
+	<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userIds = (String)session.getAttribute("userid");
+	    if (userIds == null || !DBFunctions.checkAdminAuth(userIds)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<%
 	// get from hidden field basically
 	int customerId = Integer.valueOf(request.getParameter("userId"));

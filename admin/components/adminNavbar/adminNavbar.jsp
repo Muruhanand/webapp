@@ -1,9 +1,10 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <nav class="bg-white border rounded-lg shadow-sm mb-4">
     <div class="flex justify-between items-center p-4">
-        <!-- Breadcrumb -->
         <div class="flex items-center gap-2">
-            <a href="/JADProject/admin/dashBoard.jsp" class="text-gray-400 hover:text-gray-900">/</a>
+        	<a href="/JADProject/admin/dashBoard.jsp" class="text-gray-400 hover:text-gray-900">
+                <i class="fas fa-home"></i>
+            </a>
             <span class="text-gray-400">Pages</span>
         </div>
 
@@ -23,9 +24,9 @@
                 <button class="p-1.5 hover:bg-gray-100 rounded-lg">
                     <i class="fas fa-bell text-gray-600"></i>
                 </button>
-                <button class="flex items-center gap-2">
-                    <img src="assets/avatar.jpg" alt="Profile" class="w-8 h-8 rounded-full">
-                </button>
+                <a href="/JADProject/admin/logout.jsp" class="p-1.5 hover:bg-gray-100 rounded-lg">
+                    <i class="fas fa-sign-out-alt text-gray-600"></i>
+                </a>
             </div>
         </div>
     </div>

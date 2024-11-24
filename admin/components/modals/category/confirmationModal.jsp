@@ -7,6 +7,15 @@
 <title>Delete Category Confirmation Modal</title>
 </head>
 <body>
+	<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userId2 = (String)session.getAttribute("userid");
+	    if (userId2 == null || !DBFunctions.checkAdminAuth(userId2)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
     <div id="deleteCategoryModal" class="hidden fixed inset-0 z-50"
         aria-labelledby="modal-title" role="dialog" aria-modal="true">
         <!-- backdrop -->

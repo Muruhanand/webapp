@@ -8,6 +8,15 @@
 <title>Category Management Modal</title>
 </head>
 <body>
+	<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userId = (String)session.getAttribute("userid");
+	    if (userId == null || !DBFunctions.checkAdminAuth(userId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
     <%
     String mode = request.getParameter("mode") != null ? request.getParameter("mode") : "create";
     boolean isEdit = mode.equals("edit");

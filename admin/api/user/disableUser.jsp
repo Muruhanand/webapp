@@ -10,6 +10,15 @@
 <title>Insert title here</title>
 </head>
 <body>
+<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String customerId = (String)session.getAttribute("userid");
+	    if (customerId == null || !DBFunctions.checkAdminAuth(customerId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<%
 	boolean status = Boolean.valueOf(request.getParameter("status"));
 	String userId = request.getParameter("customerId");

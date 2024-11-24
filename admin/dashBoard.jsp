@@ -14,6 +14,15 @@
 	rel="stylesheet">
 </head>
 <body class="bg-gray-100">
+	<!-- userId and admin check -->
+	<%@ page import="utils.DBFunctions" %>
+	<%
+	    String userId = (String)session.getAttribute("userid");
+	    if (userId == null || !DBFunctions.checkAdminAuth(userId)) {
+	        response.sendRedirect("/JADProject/newlogin.jsp");
+	        return;
+	    }
+	%>
 	<div class="flex min-h-screen p-4">
 		<%@ include file="components/adminSideBar/adminSideBar.jsp"%>
 		<div class="flex-1">
