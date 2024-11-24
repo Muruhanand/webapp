@@ -448,27 +448,27 @@
         function applyFilter(filterValue) {
             const url = new URL(window.location.href);
             
-            // Clear existing filter parameters
+            // clear filter params
             url.searchParams.delete('roleFilter');
             url.searchParams.delete('statusFilter');
             
-            // Apply new filter
+            // apply fiter
             if (filterValue.startsWith('role:')) {
                 url.searchParams.set('roleFilter', filterValue.split(':')[1]);
             } else if (filterValue.startsWith('status:')) {
                 url.searchParams.set('statusFilter', filterValue.split(':')[1]);
             }
             
-            // Reset to first page when filtering
+            // go back first page
             url.searchParams.set('page', '1');
             
-            // Keep existing page size
+            // keep page size
             const currentPageSize = url.searchParams.get('pageSize');
             if (currentPageSize) {
                 url.searchParams.set('pageSize', currentPageSize);
             }
             
-            // Keep existing search term
+            // keep search param
             const currentSearch = url.searchParams.get('search');
             if (currentSearch) {
                 url.searchParams.set('search', currentSearch);
@@ -477,7 +477,7 @@
             window.location.href = url.toString();
         }
 
-        // Set selected filter on page load
+        // set filter on the text
         document.addEventListener('DOMContentLoaded', function() {
 		    const urlParams = new URLSearchParams(window.location.search);
 		    const roleFilter = urlParams.get('roleFilter');
