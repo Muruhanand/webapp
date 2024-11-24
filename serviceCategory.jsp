@@ -48,8 +48,7 @@
 	int totalRecords = 0;
 	try {
 		Class.forName("com.mysql.cj.jdbc.Driver");
-
-        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+    String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
 		conn = DriverManager.getConnection(connURL);
 
 		String countQuery = "SELECT COUNT(*) FROM service_category";

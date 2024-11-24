@@ -20,14 +20,13 @@
             <div id="login" class="form-container">
                 <form action="loginprocess.jsp" method="post">
                     <ul class="login-form">
-                        <li><label for="email">Member ID:</label> <input type="text" id="loginid" name="email"></li>
+                        <li><label for="email">Email:</label> <input type="text" id="loginid" name="email"></li>
                         <li><label for="password">Password:</label> <input type="password" id="password" name="password"></li>
                     </ul>
                     <button type="submit" name="btnSubmit">Login</button>
                 </form>
             </div>
 
-            <!-- Register Form -->
             <div id="register" class="form-container" style="display: none;">
                 <form action="registerprocess.jsp" method="post">
                     <ul class="register-form" id="tabform">
