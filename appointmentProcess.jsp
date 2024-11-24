@@ -9,8 +9,10 @@
 <body>
 <%@ page import="java.text.SimpleDateFormat, java.util.Date, java.sql.*, java.text.ParseException, java.math.BigDecimal, java.lang.StringBuilder"%>
 <%
-    String customer_id = (String) session.getAttribute("userid");
-    if (customer_id == null) {
+    String customer_id = "";
+    if(session.getAttribute("userid") != null) {
+        customer_id = (String) session.getAttribute("userid");
+    } else {
         out.println("<script>alert('Please log in to book an appointment.'); window.location.href = 'index.jsp';</script>");
         return;
     }
@@ -32,8 +34,8 @@
     } else {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            sdf.setLenient(false);
-            sdf.parse(selectedDate);
+            sdf.setLenient(false); // Strict parsing
+            Date date = sdf.parse(selectedDate);
         } catch (ParseException e) {
             isValid = false;
             errorMessage.append("Invalid date format (expected yyyy-MM-dd). ");
@@ -45,22 +47,28 @@
         isValid = false;
         errorMessage.append("Invalid or missing start time (expected HH:mm). ");
     }
-    if (selectedTimeEnd == null || !selectedTimeEnd.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
+
+    if (selectedTimeEnd == null || selectedTimeEnd.trim().isEmpty()) {
         isValid = false;
-        errorMessage.append("Invalid or missing end time (expected HH:mm). ");
-    }
-    if (isValid) {
+        errorMessage.append("Ending time is required. ");
+    } else if (!selectedTimeEnd.matches("^(?:[01]\\d|2[0-3]):[0-5]\\d$")) {
+        isValid = false;
+        errorMessage.append("Invalid end time format (expected HH:mm). ");
+    } else if (isValid) {
         try {
             SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
             Date startTime = sdf.parse(selectedTimeStart);
             Date endTime = sdf.parse(selectedTimeEnd);
+            
+            long differenceInMilliSeconds = endTime.getTime() - startTime.getTime();
+            long differenceInHours = differenceInMilliSeconds / (60 * 60 * 1000);
 
-            long differenceInMillis = endTime.getTime() - startTime.getTime();
-            if (differenceInMillis < 3600000 || differenceInMillis % 3600000 != 0) {
+            // Validate the time difference
+            if (differenceInHours < 1 || differenceInMilliSeconds % (60 * 60 * 1000) != 0) {
                 isValid = false;
                 errorMessage.append("Time difference must be whole hours. ");
             } else {
-                numOfHours = (int) (differenceInMillis / 3600000);
+                numOfHours = (int) differenceInHours;
             }
         } catch (ParseException e) {
             isValid = false;
@@ -75,7 +83,7 @@
     }
     if (serviceOption == null || !serviceOption.matches("\\d+")) {
         isValid = false;
-        errorMessage.append("Invalid or missing service. ");
+        errorMessage.append("Service selection is required and must be numeric. ");
     }
 
     if (!isValid) {
@@ -100,7 +108,8 @@
 
         if (rs.next()) {
             String serviceId = rs.getString("service_id");
-            BigDecimal price = rs.getBigDecimal("price");
+            String priceStr = rs.getString("price");
+            BigDecimal price = new BigDecimal(priceStr);
             BigDecimal totalPrice = price.multiply(BigDecimal.valueOf(numOfHours));
 
             String sqlInsert = "INSERT INTO bookings (service_id, customer_id, booking_date, booking_start_time, booking_end_time, total_price) VALUES (?, ?, ?, ?, ?, ?)";
