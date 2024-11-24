@@ -131,7 +131,7 @@
                     class="w-full flex items-center justify-between px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                 <div class="flex items-center">
                     <i class="fas fa-calendar-alt w-5 text-center"></i>
-                    <span class="ml-3">Bookings</span>
+                    <span class="ml-3">Categories</span>
                 </div>
                 <i id="bookingsIcon" class="fas fa-chevron-down transform transition-transform duration-300"></i>
             </button>
@@ -140,7 +140,7 @@
                 <div class="ml-8 mt-2 space-y-1 py-2">
                     <a href="services.jsp" class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                         <span class="font-medium w-5 text-center">V</span>
-                        <span class="ml-3">View Bookings</span>
+                        <span class="ml-3">View Categories</span>
                     </a>
                     <a href="products.jsp" class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
                         <span class="font-medium w-5 text-center">N</span>
