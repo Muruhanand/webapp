@@ -59,7 +59,7 @@
 						<div class="flex justify-between items-center mb-6">
 							<h2 class="text-xl font-bold">All Services</h2>
 							<div class="flex gap-2">
-								<button onclick="openModal('userModal')"
+								<button onclick="openModal('serviceModal')"
 									class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2">
 									<i class="fas fa-plus"></i> Add Service
 								</button>
