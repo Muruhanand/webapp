@@ -43,7 +43,7 @@ try {
 	<!-- header -->
 	<div class="px-6 py-4">
 		<div class="flex items-center gap-2">
-			<i class="fas fa-cube text-blue-600 w-5 text-center"></i> <span
+			<img src="/JADProject/media/brand-logo.png" alt="Brand Logo" class="w-5 h-5 object-contain"> <span
 				class="font-semibold">Cleaning Services PRO</span>
 		</div>
 	</div>
@@ -68,11 +68,7 @@ try {
 			<div id="profileMenu"
 				class="overflow-hidden transition-all duration-300 max-h-0 opacity-0">
 				<div class="ml-8 mt-2 space-y-1 py-2">
-					<a href="profile.jsp"
-						class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
-						<span class="font-medium w-5 text-center">P</span> <span
-						class="ml-3">Profile</span>
-					</a> <a href="/JADProject/logout.jsp"
+					<a href="/JADProject/logout.jsp"
 						class="flex items-center px-3 py-2 text-gray-700 hover:bg-gray-100 rounded-lg">
 						<span class="font-medium w-5 text-center">L</span> <span
 						class="ml-3">Logout</span>
