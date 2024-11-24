@@ -37,7 +37,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Connect to the database
-        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         // SQL query to fetch the stored hashed password by email

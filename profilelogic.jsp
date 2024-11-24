@@ -31,7 +31,7 @@ try {
 
     // Database connection
     Class.forName("com.mysql.cj.jdbc.Driver");
-    String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+    String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
     conn = DriverManager.getConnection(connURL);
 
     // Query to get user details
@@ -66,29 +66,58 @@ try {
     </ul>
     <div class="tab-content" id="myTabContent">
         <div class="tab-pane fade show active" id="service-details" role="tabpanel" aria-labelledby="service-details-tab">
-            <form action="updateService.jsp" method="post" class="mt-3">
+            <form action="updateService.jsp" method="post" class="mt-3" onsubmit="return validateProfileForm();">
                 <div class="form-group">
                     <label for="firstName">First Name:</label>
-                    <input type="text" class="form-control" id="first_name" name="first_name" value="<%= firstName %>">
+                    <input type="text" class="form-control" id="first_name" name="first_name" value="<%= firstName %>" required>
                 </div>
                 <div class="form-group">
                     <label for="lastName">Last Name:</label>
-                    <input type="text" class="form-control" id="last_name" name="last_name" value="<%= lastName %>">
+                    <input type="text" class="form-control" id="last_name" name="last_name" value="<%= lastName %>" required>
                 </div>
                 <div class="form-group">
                     <label for="email">Email:</label>
-                    <input type="email" class="form-control" id="email" name="email" value="<%= email %>">
+                    <input type="email" class="form-control" id="email" name="email" value="<%= email %>" required>
                 </div>
                 <div class="form-group">
                     <label for="phoneNum">Phone Number:</label>
-                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="<%= phoneNum %>">
+                    <input type="text" class="form-control" id="phone_number" name="phone_number" value="<%= phoneNum %>" required>
                 </div>
                 <div class="form-group">
                     <label for="address">Address:</label>
-                    <input type="text" class="form-control" id="address" name="address" value="<%= address %>">
+                    <input type="text" class="form-control" id="address" name="address" value="<%= address %>" required>
                 </div>
                 <button type="submit" class="btn btn-primary">Update Service</button>
             </form>
+
+            <script>
+                function validateProfileForm() {
+                    const firstName = document.getElementById('first_name').value.trim();
+                    const lastName = document.getElementById('last_name').value.trim();
+                    const email = document.getElementById('email').value.trim();
+                    const phoneNumber = document.getElementById('phone_number').value.trim();
+                    const address = document.getElementById('address').value.trim();
+
+                    if (!firstName || !lastName || !email || !phoneNumber || !address) {
+                        alert("All fields are required and cannot contain only spaces.");
+                        return false;
+                    }
+
+                    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                    if (!emailRegex.test(email)) {
+                        alert("Please enter a valid email address.");
+                        return false;
+                    }
+
+                    const phoneRegex = /^[0-9]*$/;
+                    if (!phoneRegex.test(phoneNumber)) {
+                        alert("Phone number must be numeric.");
+                        return false;
+                    }
+
+                    return true;
+                }
+            </script>
         </div>
         <div class="tab-pane fade" id="booking-history" role="tabpanel" aria-labelledby="booking-history-tab">
             <h3 class="mt-3">Booking History</h3>
