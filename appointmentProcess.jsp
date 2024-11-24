@@ -27,6 +27,13 @@
     boolean isValid = true;
     StringBuilder errorMessage = new StringBuilder();
 
+    // Print the values being submitted
+    System.out.println("Selected Date: " + selectedDate);
+    System.out.println("Selected Time Start: " + selectedTimeStart);
+    System.out.println("Selected Time End: " + selectedTimeEnd);
+    System.out.println("Category Option: " + categoryOption);
+    System.out.println("Service Option: " + serviceOption);
+
     // Validate selectedDate
     if (selectedDate == null || selectedDate.trim().isEmpty()) {
         isValid = false;
