@@ -49,7 +49,9 @@
 							%>
 
 							<div class="space-y-4">
-								<!-- Service Name -->
+								<!-- service id -->
+								<input type="text" name="service_id" id="service_id" class="hidden"/>
+								<!-- service Name -->
 								<div>
 									<label class="block text-sm font-medium text-gray-700 mb-1">Service
 										Name</label> <input type="text" name="service_name" id="service_name"
@@ -57,24 +59,21 @@
 										class="w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200">
 								</div>
 
-								<!-- Description -->
+								<!-- description -->
 								<div>
 									<label class="block text-sm font-medium text-gray-700 mb-1">Description</label>
 									<textarea name="description" id="description" required rows="3"
 										class="w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200"></textarea>
 								</div>
 
-								<!-- Price -->
+								<!-- price -->
 								<div>
 									<label class="block text-sm font-medium text-gray-700 mb-1">Price
 										($)</label> <input type="number" name="price" id="price" required
 										step="0.01" min="0"
 										class="w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200">
 								</div>
-
-								<!-- Category -->
-								<!-- Previous code remains same until the category dropdown section -->
-
+															
 								<!-- Category -->
 								<div>
 									<label class="block text-sm font-medium text-gray-700 mb-1">Category</label>
@@ -132,46 +131,46 @@
 	</div>
 
 	<script>
-    function openModal(modalId, serviceData = null) {
-        const modal = document.getElementById(modalId);
-        const backdrop = modal.querySelector('.modal-backdrop');
-        const content = modal.querySelector('.modal-content');
-        const editModalTitle = modal.querySelector('#modal-title');
-        const submitButton = modal.querySelector('#submitButton');
-        const serviceForm = document.getElementById('serviceForm');
-        
-        // open modal
-        modal.classList.remove('hidden');
-        
-        // animation
-        requestAnimationFrame(() => {
-            backdrop.classList.add('opacity-50');
-            content.classList.add('opacity-100', 'scale-100');
-            content.classList.remove('scale-95', 'opacity-0');
-        });
-        
-        // prevent body scroll
-        document.body.style.overflow = 'hidden';
+	function openModal(modalId, serviceData = null) {
+	    const modal = document.getElementById(modalId);
+	    const backdrop = modal.querySelector('.modal-backdrop');
+	    const content = modal.querySelector('.modal-content');
+	    const editModalTitle = modal.querySelector('#modal-title');
+	    const submitButton = modal.querySelector('#submitButton');
+	    const serviceForm = document.getElementById('serviceForm');
+	    
+	    // open modal
+	    modal.classList.remove('hidden');
+	    
+	    // animation
+	    requestAnimationFrame(() => {
+	        backdrop.classList.add('opacity-50');
+	        content.classList.add('opacity-100', 'scale-100');
+	        content.classList.remove('scale-95', 'opacity-0');
+	    });
+	    
+	    // prevent body scroll
+	    document.body.style.overflow = 'hidden';
 
-        // reset form
-        serviceForm.reset();
-        
-        if (serviceData && serviceData.mode === 'edit') {
-            editModalTitle.textContent = 'Edit Service';
-            submitButton.textContent = 'Save Changes';
-            serviceForm.action = 'api/service/editService.jsp';
-            
-            document.getElementById('serviceId').value = serviceData.id;
-            document.getElementById('service_name').value = serviceData.name;
-            document.getElementById('description').value = serviceData.description;
-            document.getElementById('price').value = serviceData.price;
-            document.getElementById('category_id').value = serviceData.category_id;
-        } else {
-            editModalTitle.textContent = 'Add New Service';
-            submitButton.textContent = 'Add Service';
-            serviceForm.action = 'api/service/createService.jsp';
-        }
-    }
+	    // reset form
+	    serviceForm.reset();
+	    
+	    if (serviceData && serviceData.mode === 'edit') {
+	        editModalTitle.textContent = 'Edit Service';
+	        submitButton.textContent = 'Save Changes';
+	        serviceForm.action = 'api/service/editService.jsp';
+	        
+	        document.getElementById('service_id').value = serviceData.id;
+	        document.getElementById('service_name').value = serviceData.name;
+	        document.getElementById('description').value = serviceData.description;
+	        document.getElementById('price').value = serviceData.price;
+	        document.getElementById('category_id').value = serviceData.category_id;
+	    } else {
+	        editModalTitle.textContent = 'Add New Service';
+	        submitButton.textContent = 'Add Service';
+	        serviceForm.action = 'api/service/createService.jsp';
+	    }
+	}
 
     function closeModal(modalId) {
         const modal = document.getElementById(modalId);
@@ -188,74 +187,75 @@
         }, 300);
     }
 
-    // Validate form
+    // form validation
     document.getElementById('serviceForm').addEventListener('submit', function(e) {
-	    e.preventDefault(); // Prevent form submission until validation passes
+    	// dont allow form submission
+	    e.preventDefault(); 
 	    
-	    // Get form values and trim whitespace
+	    // obtain values and trim whitespace
 	    const serviceName = document.getElementById('service_name').value.trim();
 	    const description = document.getElementById('description').value.trim();
 	    const price = parseFloat(document.getElementById('price').value);
 	    const categoryId = document.getElementById('category_id').value;
 	    
-	    // Validate service name
+	    // service name validation
 	    if (!serviceName || serviceName.length < 3) {
 	        alert('Service name must be at least 3 characters long (excluding spaces)');
 	        document.getElementById('service_name').focus();
 	        return false;
 	    }
 	    
-	    // Check if service name is only spaces
+	    // service name space check
 	    if (!serviceName.replace(/\s/g, '').length) {
 	        alert('Service name cannot contain only spaces');
 	        document.getElementById('service_name').focus();
 	        return false;
 	    }
 	    
-	    // Validate description
+	    // description validation
 	    if (!description || description.length < 10) {
 	        alert('Description must be at least 10 characters long (excluding spaces)');
 	        document.getElementById('description').focus();
 	        return false;
 	    }
 	    
-	    // Check if description is only spaces
+	    // description space check
 	    if (!description.replace(/\s/g, '').length) {
 	        alert('Description cannot contain only spaces');
 	        document.getElementById('description').focus();
 	        return false;
 	    }
 	    
-	    // Validate price
+	    // price validation
 	    if (isNaN(price) || price <= 0) {
 	        alert('Please enter a valid price greater than 0');
 	        document.getElementById('price').focus();
 	        return false;
 	    }
 	    
-	    // Validate category
+	    // category validation
 	    if (!categoryId) {
 	        alert('Please select a category');
 	        document.getElementById('category_id').focus();
 	        return false;
 	    }
 	    
-	    // If all validations pass, submit the form
+	    // submit when all pass checks
 	    this.submit();
 	});
 	
-	// Prevent spaces at the beginning of input for service name
+ 	// no space allowance at start of input field
 	document.getElementById('service_name').addEventListener('input', function(e) {
-	    // Remove leading spaces as they're typed
+		// only allow one consecutive space
 	    if (this.value.startsWith(' ')) {
 	        this.value = this.value.trimStart();
 	    }
 	    
-	    // Allow letters, numbers, spaces (but not at start), and basic punctuation
+	 	// only letters, spaces and basic punctuation allowed
 	    this.value = this.value.replace(/[^\w\s-]/g, '');
 	});
 	
-	// Prevent spaces at the beginning of input for description
+	// prevent space at start for description
 	document.getElementById('description').addEventListener('input', function(e) {
 	    // Remove leading spaces as they're typed
 	    if (this.value.startsWith(' ')) {
@@ -263,18 +263,18 @@
 	    }
 	});
 	
-	// Price validation remains the same
+	// price validation
 	document.getElementById('price').addEventListener('input', function(e) {
-	    // Remove any characters that aren't numbers or decimal points
+	   	// only allow numbers
 	    this.value = this.value.replace(/[^\d.]/g, '');
 	    
-	    // Ensure only one decimal point
+	    // only allow one decimal point
 	    const decimalCount = this.value.split('.').length - 1;
 	    if (decimalCount > 1) {
 	        this.value = this.value.replace(/\.+$/, '');
 	    }
 	    
-	    // Ensure only two decimal places
+	    // allow only two decimal places
 	    if (this.value.includes('.')) {
 	        const parts = this.value.split('.');
 	        if (parts[1].length > 2) {
