@@ -10,7 +10,7 @@
     <div class="px-6 py-4">
         <div class="flex items-center gap-2">
             <i class="fas fa-cube text-blue-600 w-5 text-center"></i>
-            <span class="font-semibold">Material Tailwind PRO</span>
+            <span class="font-semibold">Cleaning Services PRO</span>
         </div>
     </div>
     
