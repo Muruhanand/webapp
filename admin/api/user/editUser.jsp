@@ -30,9 +30,42 @@
 	String phoneNumber = request.getParameter("phone_number");
 	String address = request.getParameter("address");
 	String password = request.getParameter("password");
-	String admin = request.getParameter("admin");
-
+	String admin = request.getParameter("role");
+	System.out.println(admin);
+	
 	boolean checkAdmin = Boolean.valueOf(admin);
+	
+	// Check if user is trying to modify their own admin status
+	if (String.valueOf(customerId).equals(userIds)) {
+	    // If updating own record, get the current admin status from database
+	    Connection checkConn = null;
+	    PreparedStatement checkStmt = null;
+	    ResultSet rs = null;
+	    try {
+	        Class.forName("com.mysql.cj.jdbc.Driver");
+	        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
+	        checkConn = DriverManager.getConnection(connURL);
+	        
+	        String checkSql = "SELECT admin FROM user WHERE customer_id = ?";
+	        checkStmt = checkConn.prepareStatement(checkSql);
+	        checkStmt.setInt(1, customerId);
+	        rs = checkStmt.executeQuery();
+	        
+	        if (rs.next()) {
+	            // Use the existing admin status instead of the submitted one
+	            checkAdmin = rs.getBoolean("admin");
+	        }
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        response.sendRedirect("/JADProject/admin/userList.jsp?status=error&message=Error checking admin status");
+	        return;
+	    } finally {
+	        if (rs != null) rs.close();
+	        if (checkStmt != null) checkStmt.close();
+	        if (checkConn != null) checkConn.close();
+	    }
+	}
+
 
 	// Hash the password with SHA-256
 	String hashedPassword = null;

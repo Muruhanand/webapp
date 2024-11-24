@@ -127,8 +127,8 @@
 									<label class="block text-sm font-medium text-gray-700 mb-1">Role</label>
 									<select name="role" id="role" required
 										class="w-full border border-gray-300 rounded-lg shadow-sm py-2 px-3 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-shadow duration-200">
-										<option value="user">User</option>
-										<option value="admin">Admin</option>
+										<option value="false">User</option>
+										<option value="true">Admin</option>
 									</select>
 								</div>
 							</div>

@@ -292,7 +292,7 @@
                                                         email: '<%=email.replace("'", "\\'")%>',
                                                         address: '<%=address.replace("'", "\\'")%>',
                                                         phoneNumber: '<%=phoneNumber.replace("'", "\\'")%>',
-                                                        role: '<%=isAdmin ? "admin" : "user"%>'
+                                                        role: '<%=isAdmin ? "true" : "false"%>'
                                                         })"
 													class="p-2 text-blue-600 hover:bg-blue-50 rounded-lg">
 													<i class="fas fa-edit"></i>
