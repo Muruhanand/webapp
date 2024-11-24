@@ -8,7 +8,6 @@
 </head>
 <body>
 <%
-    // Debug print for session attribute
     String userId = (String) session.getAttribute("userid");
 
     if (userId == null) {
@@ -16,7 +15,6 @@
         response.sendRedirect("login.jsp");
         return;
     }
-
     try {
         int userid = Integer.parseInt(userId); // Parse session userId
         String firstName = request.getParameter("first_name");
@@ -25,7 +23,6 @@
         String phoneNumber = request.getParameter("phone_number");
         String address = request.getParameter("address");
 
-        // Debug prints for received parameters
         System.out.println("Updating details for User ID: " + userid);
         System.out.println("First Name: " + firstName);
         System.out.println("Last Name: " + lastName);
@@ -33,16 +30,13 @@
         System.out.println("Phone Number: " + phoneNumber);
         System.out.println("Address: " + address);
 
-        // Database connection setup
         String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
         Class.forName("com.mysql.cj.jdbc.Driver"); // Load driver
         Connection connection = DriverManager.getConnection(connURL);
 
-        // SQL query to update user details
         String sql = "UPDATE user SET first_name = ?, last_name = ?, email = ?, phone_number = ?, address = ? WHERE customer_id = ?";
         PreparedStatement statement = connection.prepareStatement(sql);
 
-        // Set parameters for the prepared statement
         statement.setString(1, firstName);
         statement.setString(2, lastName);
         statement.setString(3, email);
@@ -50,7 +44,6 @@
         statement.setString(5, address);
         statement.setInt(6, userid); // Use corrected variable name
 
-        // Execute update query
         int rowsAffected = statement.executeUpdate();
 
         // Feedback to user
