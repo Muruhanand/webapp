@@ -285,7 +285,8 @@
 												<button
 													onclick="openModal('serviceModal', {
                                                         mode: 'edit',
-                                                        id: <%=serviceId%>,                                                  
+                                                        id: <%=serviceId%>,                
+                                                        name: '<%=serviceName.replace("'", "\\'")%>',                                  
                                                         description: '<%=description.replace("'", "\\'")%>',
                                                         price: '<%= String.valueOf(price).replace("'", "\\'") %>',
                                                         category_id: '<%=String.valueOf(categoryId).replace("'", "\\'") %>',                                                       
