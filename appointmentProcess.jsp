@@ -105,7 +105,7 @@
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String connURL = "jdbc:mysql://localhost:3306/jadca1?user=root&password=root123&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         String sqlStr = "SELECT * FROM service WHERE service_id = ?";

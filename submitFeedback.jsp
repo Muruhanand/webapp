@@ -22,7 +22,7 @@ String userId = (String) session.getAttribute("userid");
 
     try {
         Class.forName("com.mysql.cj.jdbc.Driver");
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         String sqlInsert = "INSERT INTO feedback (customer_id ,service_id, rating, comment) VALUES (?, ?, ?, ?)";

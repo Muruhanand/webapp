@@ -30,7 +30,7 @@
         System.out.println("Phone Number: " + phoneNumber);
         System.out.println("Address: " + address);
 
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         Class.forName("com.mysql.cj.jdbc.Driver"); // Load driver
         Connection connection = DriverManager.getConnection(connURL);
 

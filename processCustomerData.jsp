@@ -40,7 +40,7 @@
         Class.forName("com.mysql.cj.jdbc.Driver");
 
         // Connect to the database
-        String connURL = "jdbc:mysql://localhost:3306/jad_ca?user=root&password=root1234&serverTimezone=UTC";
+        String connURL = "jdbc:mysql://localhost:3306/JADCA1?user=root&password=BlaBla968@gmail.com!&serverTimezone=UTC";
         conn = DriverManager.getConnection(connURL);
 
         // SQL statement for inserting customer data with NOW() for created_at
